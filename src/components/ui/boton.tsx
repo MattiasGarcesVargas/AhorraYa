@@ -13,7 +13,8 @@ const boton = tv({
   variants: {
     variante: {
       primario: 'bg-primario',
-      secundario: 'bg-superficie-alta',
+      // Secundario = contorno con cuerpo: se ve pulsable sin competir con el primario.
+      secundario: 'border border-borde bg-superficie',
       contorno: 'border border-borde bg-transparent',
       fantasma: 'bg-transparent',
       peligro: 'bg-peligro-suave',
@@ -21,7 +22,7 @@ const boton = tv({
       'tinta-contorno': 'border border-tinta-borde bg-transparent',
     },
     tamano: {
-      sm: 'h-10 px-4',
+      sm: 'h-11 px-4',
       md: 'h-12 px-5',
       lg: 'h-14 px-6',
     },
@@ -92,7 +93,7 @@ export function Boton({
         <View className="flex-row items-center gap-2">
           {icono ? <Icono nombre={icono} tamano={18} color={tono} /> : null}
           <Texto
-            peso="bold"
+            peso="semibold"
             variante={tamano === 'sm' ? 'detalle' : 'cuerpo'}
             tono={TONO_TEXTO[tono as keyof typeof TONO_TEXTO]}
             className={variante === 'claro' ? 'text-tinta' : undefined}
