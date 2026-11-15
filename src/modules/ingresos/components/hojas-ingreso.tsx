@@ -66,7 +66,7 @@ export interface HojaNuevoIngresoProps {
  */
 export function HojaNuevoIngreso({ cuentas, plan, alTerminar }: HojaNuevoIngresoProps) {
   const registrar = useRegistrarIngreso();
-  const diarias = cuentas.filter((cuenta) => cuenta.tipo === 'diaria');
+  const diarias = cuentas.filter((cuenta) => cuenta.tipo !== 'flexible');
   const cuentaAhorro = cuentaPrincipal(cuentas, 'flexible');
 
   const [tipo, setTipo] = useState<TipoIngreso>('sueldo');
@@ -135,7 +135,7 @@ export function HojaNuevoIngreso({ cuentas, plan, alTerminar }: HojaNuevoIngreso
                   cuentas={diarias}
                   valor={llegaA}
                   alCambiar={setLlegaA}
-                  ninguna="Efectivo"
+                  ninguna="Ninguna"
                 />
               </CampoEtiquetado>
             ) : null}
@@ -191,7 +191,7 @@ export interface HojaEditarIngresoProps {
 export function HojaEditarIngreso({ ingreso, cuentas, alTerminar }: HojaEditarIngresoProps) {
   const actualizar = useActualizarIngreso();
   const eliminar = useEliminarIngreso();
-  const diarias = cuentas.filter((cuenta) => cuenta.tipo === 'diaria');
+  const diarias = cuentas.filter((cuenta) => cuenta.tipo !== 'flexible');
 
   const [tipo, setTipo] = useState<TipoIngreso>(ingreso.tipo);
   const [llegaA, setLlegaA] = useState<number | null>(ingreso.cuentaId);
@@ -241,7 +241,7 @@ export function HojaEditarIngreso({ ingreso, cuentas, alTerminar }: HojaEditarIn
             cuentas={diarias}
             valor={llegaA}
             alCambiar={setLlegaA}
-            ninguna="Efectivo"
+            ninguna="Ninguna"
           />
         </CampoEtiquetado>
       ) : null}
