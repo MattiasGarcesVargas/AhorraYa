@@ -19,7 +19,12 @@ import { useCuentas } from '@/modules/cuentas/hooks/use-cuentas';
 import { cuentaPrincipal } from '@/modules/cuentas/utils/saldos';
 import { SelectorCategoria } from '@/modules/gastos/components/selector-categoria';
 import { SelectorMetodoPago } from '@/modules/gastos/components/selector-metodo-pago';
-import { cuentaDelGasto, tocaCuenta } from '@/modules/gastos/utils/cuenta-del-gasto';
+import {
+  billeteraDe,
+  cuentaDelGasto,
+  cuentasDeBanco,
+  tocaCuenta,
+} from '@/modules/gastos/utils/cuenta-del-gasto';
 import { useTema } from '@/providers/tema-provider';
 
 import { useEliminarSuscripcion, useGuardarSuscripcion } from '../hooks/use-suscripciones';
@@ -70,7 +75,7 @@ export function FormularioSuscripcion({ suscripcion, alTerminar }: FormularioSus
     montoCentavos: interpretarImporte(montoTexto) ?? 0,
     categoria: categoria ?? '',
     metodoPago: metodo,
-    cuentaId: cuentaDelGasto(metodo, cuenta),
+    cuentaId: cuentaDelGasto(metodo, cuenta, billeteraDe(cuentas)),
     diaCobro: Number.isNaN(dia) ? 0 : dia,
     activa,
   });
@@ -80,7 +85,8 @@ export function FormularioSuscripcion({ suscripcion, alTerminar }: FormularioSus
 
   const diaValido = !errores.diaCobro;
   const hoyEsElDia = !editando && diaValido && esDiaDeCobro(dia, hoy);
-  const eligeCuenta = tocaCuenta(metodo) && cuentas.length > 0;
+  const deBanco = cuentasDeBanco(cuentas);
+  const eligeCuenta = tocaCuenta(metodo) && deBanco.length > 0;
 
   const alGuardar = () => {
     setIntentoGuardar(true);
@@ -211,7 +217,7 @@ export function FormularioSuscripcion({ suscripcion, alTerminar }: FormularioSus
         {eligeCuenta ? (
           <CampoEtiquetado etiqueta="Sale de">
             <SelectorCuenta
-              cuentas={cuentas}
+              cuentas={deBanco}
               valor={cuenta}
               alCambiar={setCuenta}
               ninguna="Ninguna"

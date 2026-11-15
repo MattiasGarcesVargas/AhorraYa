@@ -1,5 +1,4 @@
 import { deFechaIso, type FechaIso } from '@/lib/fechas';
-import { cuentaDelGasto } from '@/modules/gastos/utils/cuenta-del-gasto';
 import { registrarGasto, type ReposRegistro } from '@/modules/gastos/services/registrar-gasto';
 
 import { fechaDeCobro } from '../utils/fecha-de-cobro';
@@ -57,7 +56,8 @@ export async function cobrarSuscripciones(repos: ReposCobro, hoy: FechaIso): Pro
         montoCentavos: suscripcion.montoCentavos,
         categoria: suscripcion.categoria,
         metodoPago: suscripcion.metodoPago,
-        cuentaId: cuentaDelGasto(suscripcion.metodoPago, suscripcion.cuentaId),
+        // Ya viene resuelta del formulario (cuenta del banco, billetera o ninguna).
+        cuentaId: suscripcion.cuentaId,
         nota: suscripcion.nombre,
         fecha,
         origen: 'suscripcion',

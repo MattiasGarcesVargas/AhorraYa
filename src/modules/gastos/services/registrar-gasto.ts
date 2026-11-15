@@ -132,8 +132,12 @@ export async function actualizarGasto(
   const original = await repos.gastos.obtener(id);
   if (!original) throw new Error('Ese gasto ya no existe.');
 
-  const { origen: _origen, gastoPadreId: _padre, impuesto: _impuesto, ...validos } =
-    validarNuevoGasto({ ...cambios, origen: original.origen });
+  const {
+    origen: _origen,
+    gastoPadreId: _padre,
+    impuesto: _impuesto,
+    ...validos
+  } = validarNuevoGasto({ ...cambios, origen: original.origen });
   await repos.gastos.actualizar(id, validos);
 
   const impuestos = await sincronizarImpuestos(repos, id, { ...original, ...validos });

@@ -16,5 +16,7 @@ export default function SuscripcionScreen() {
 
   const cerrar = () => (router.canGoBack() ? router.back() : router.replace('/suscripciones'));
 
-  return <FormularioSuscripcion key={id ?? 'nueva'} suscripcion={suscripcion} alTerminar={cerrar} />;
+  return (
+    <FormularioSuscripcion key={id ?? 'nueva'} suscripcion={suscripcion} alTerminar={cerrar} />
+  );
 }
