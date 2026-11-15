@@ -22,7 +22,9 @@ export const UBER: Categoria = {
  * Repositorios en memoria para los tests de casos de uso: dependen de las
  * INTERFACES, así que se prueban sin SQLite ni React Native. Sólo para tests.
  */
-export function reposEnMemoria(listaCategorias: readonly Categoria[] = [...CATEGORIAS_DE_PARTIDA, UBER]) {
+export function reposEnMemoria(
+  listaCategorias: readonly Categoria[] = [...CATEGORIAS_DE_PARTIDA, UBER],
+) {
   const gastosGuardados: Gasto[] = [];
   const ingresosGuardados: Ingreso[] = [];
   const movimientos: MovimientoCuenta[] = [];

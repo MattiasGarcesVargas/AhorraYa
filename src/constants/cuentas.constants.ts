@@ -17,6 +17,13 @@ export const CUENTAS_INICIALES = [
   tasaBp: number;
 }[];
 
+/** La billetera: el efectivo que llevo encima. Se siembra aparte (migración 6). */
+export const BILLETERA_INICIAL = {
+  banco: 'efectivo',
+  nombre: 'Billetera',
+  tipo: 'efectivo',
+} as const;
+
 export const LARGO_MAXIMO_NOMBRE_CUENTA = 30;
 
 /** Tope de la tasa anual: 30,00 %. Por encima es un error de tecleo. */
