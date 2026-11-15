@@ -100,3 +100,7 @@ Docs: https://docs.expo.dev/eas/index.md
   `armarTransferencia` (`modules/cuentas/utils/transferencia.ts`) para que la meta lo vea bien.
 - Aportes al ahorro llevan `origen` (`sueldo` | `extra`): el extra suma a la meta del mes pero no
   al aporte del cobro. El plan se valida entero con `validarPlan` (aporte × cobros ≤ meta).
+- **Billetera**: cuenta de tipo `efectivo` (migración 6, banco `efectivo`). Un gasto en efectivo sale
+  de ella sin elegir (`cuentaDelGasto` + `billeteraDe` en `gastos/utils/cuenta-del-gasto.ts`); al
+  pagar con débito o transferencia sólo se ofrecen las cuentas del banco (`cuentasDeBanco`). Cuenta
+  en "para gastar", no en el ahorro. Retirar del cajero es una transferencia hacia la billetera.
