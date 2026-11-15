@@ -2,13 +2,7 @@ import { useState } from 'react';
 import { Pressable, View } from 'react-native';
 
 import { inicioDeMes, moverMes, semanasDelMes } from '@/lib/calendario';
-import {
-  formatDiaRelativo,
-  formatMesAnio,
-  hoyIso,
-  sumarDias,
-  type FechaIso,
-} from '@/lib/fechas';
+import { formatDiaRelativo, formatMesAnio, hoyIso, sumarDias, type FechaIso } from '@/lib/fechas';
 import { hapticos } from '@/lib/hapticos';
 
 import { BotonIcono, Icono, Texto } from './ui';
