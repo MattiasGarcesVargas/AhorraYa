@@ -63,7 +63,9 @@ export function PagatePrimero({ ahorro, extra = 0, tipoPeriodo = 'quincena' }: P
       <Texto variante="detalle" tono="suave" className="mt-1" numerico>
         {ahorro.neto > 0
           ? `Llevas ${formatMoneda(ahorro.neto)}. Te faltan ${formatMoneda(ahorro.falta)} para tu aporte ${esMes ? 'del mes' : 'de la quincena'}.`
-          : `Aparta ${formatMoneda(ahorro.objetivo)} al ahorro apenas cobres, antes de gastar nada.`}
+          : ahorro.neto < 0
+            ? `Sacaste ${formatMoneda(-ahorro.neto)} del ahorro. Te faltan ${formatMoneda(ahorro.falta)} para tu aporte ${esMes ? 'del mes' : 'de la quincena'}.`
+            : `Aparta ${formatMoneda(ahorro.objetivo)} al ahorro apenas cobres, antes de gastar nada.`}
       </Texto>
       {extra > 0 ? (
         <Texto variante="detalle" tono="suave" className="mt-1" numerico>
