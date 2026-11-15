@@ -21,7 +21,7 @@ import type { Cuenta } from '@/modules/cuentas/cuentas.types';
 import type { BorradorGasto, Gasto, NuevoGasto } from '../gastos.types';
 import { LARGO_MAXIMO_NOTA } from '../schema/gasto.schema';
 import { useUltimasElecciones } from '../store/ultimas-elecciones.store';
-import { cuentaDelGasto, tocaCuenta } from '../utils/cuenta-del-gasto';
+import { billeteraDe, cuentaDelGasto, cuentasDeBanco, tocaCuenta } from '../utils/cuenta-del-gasto';
 import { aplicaImpuestos } from '../utils/impuestos-exterior';
 import { DesgloseExterior } from './desglose-exterior';
 import { SelectorCategoria } from './selector-categoria';
@@ -88,7 +88,12 @@ export function FormularioGasto({
   const ayer = sumarDias(hoy, -1);
   const centavos = entradaACentavos(entrada);
   const listo = centavos > 0 && categoria !== null;
-  const eligeCuenta = tocaCuenta(metodo) && cuentas.length > 0;
+  const deBanco = cuentasDeBanco(cuentas);
+  const eligeCuenta = tocaCuenta(metodo) && deBanco.length > 0;
+  // Un gasto en efectivo anterior a la billetera se deja como estaba: si al
+  // corregirlo se le asignara, bajaría hoy un efectivo que ya no existe.
+  const eraSinBilletera = gasto?.metodoPago === 'efectivo' && gasto.cuentaId === null;
+  const billetera = eraSinBilletera ? null : billeteraDe(cuentas);
   const conImpuestos =
     categoria !== null && aplicaImpuestos(catalogo.porId(categoria), metodo) && centavos > 0;
 
@@ -98,7 +103,7 @@ export function FormularioGasto({
       montoCentavos: centavos,
       categoria,
       metodoPago: metodo,
-      cuentaId: cuentaDelGasto(metodo, cuenta),
+      cuentaId: cuentaDelGasto(metodo, cuenta, billetera),
       nota: descripcion.trim() || null,
       fecha,
       origen: gasto?.origen ?? 'app',
@@ -166,7 +171,7 @@ export function FormularioGasto({
         {eligeCuenta ? (
           <CampoEtiquetado etiqueta="Sale de">
             <SelectorCuenta
-              cuentas={cuentas}
+              cuentas={deBanco}
               valor={cuenta}
               alCambiar={setCuenta}
               ninguna="Ninguna"

@@ -1,7 +1,7 @@
 import type { SQLiteDatabase } from 'expo-sqlite';
 
 import { CATEGORIAS_DEL_EXTERIOR, CATEGORIAS_INICIALES } from '@/constants/categorias.constants';
-import { CUENTAS_INICIALES } from '@/constants/cuentas.constants';
+import { BILLETERA_INICIAL, CUENTAS_INICIALES } from '@/constants/cuentas.constants';
 import { PLAN_INICIAL, PRESUPUESTO_INICIAL } from '@/constants/plan.constants';
 import { hoyIso } from '@/lib/fechas';
 
@@ -83,6 +83,25 @@ export async function sembrarCuentas(db: SQLiteDatabase): Promise<number | null>
     if (cuenta.tipo === 'flexible' && flexible === null) flexible = lastInsertRowId;
   }
   return flexible;
+}
+
+/**
+ * Crea la billetera (el efectivo en mano) si todavía no hay ninguna cuenta de
+ * efectivo. Lo usan la migración 6 y "Borrar todos los datos".
+ */
+export async function sembrarBilletera(db: SQLiteDatabase): Promise<void> {
+  const existe = await db.getFirstAsync<{ id: number }>(
+    "SELECT id FROM cuentas WHERE tipo = 'efectivo' LIMIT 1",
+  );
+  if (existe) return;
+  await db.runAsync(
+    `INSERT INTO cuentas (banco, nombre, tipo, orden, creado_en)
+     VALUES (?, ?, ?, (SELECT COALESCE(MAX(orden), -1) + 1 FROM cuentas), ?)`,
+    BILLETERA_INICIAL.banco,
+    BILLETERA_INICIAL.nombre,
+    BILLETERA_INICIAL.tipo,
+    new Date().toISOString(),
+  );
 }
 
 /**
@@ -308,6 +327,35 @@ const MIGRACIONES: Migracion[] = [
         );
       `);
       await sembrarCategoriasDelExterior(db);
+    },
+  },
+  {
+    /**
+     * La billetera: una cuenta de tipo `efectivo` para saber cuánta plata en
+     * efectivo tengo. La tabla `cuentas` sólo admitía 'diaria' y 'flexible'
+     * (un CHECK no se puede cambiar en SQLite), así que se rehace con el tipo
+     * nuevo conservando los mismos ids: nada que apunte a una cuenta se mueve.
+     *
+     * Los gastos en efectivo anteriores quedan sin cuenta, como estaban: la
+     * billetera empieza en cero y se le anota el saldo de hoy.
+     */
+    version: 6,
+    aplicar: async (db) => {
+      await db.execAsync(`
+        CREATE TABLE cuentas_nueva (
+          id INTEGER PRIMARY KEY AUTOINCREMENT,
+          banco TEXT NOT NULL,
+          nombre TEXT NOT NULL,
+          tipo TEXT NOT NULL CHECK (tipo IN ('diaria', 'flexible', 'efectivo')),
+          orden INTEGER NOT NULL,
+          creado_en TEXT NOT NULL
+        );
+        INSERT INTO cuentas_nueva (id, banco, nombre, tipo, orden, creado_en)
+          SELECT id, banco, nombre, tipo, orden, creado_en FROM cuentas;
+        DROP TABLE cuentas;
+        ALTER TABLE cuentas_nueva RENAME TO cuentas;
+      `);
+      await sembrarBilletera(db);
     },
   },
 ];

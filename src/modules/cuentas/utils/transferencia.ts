@@ -47,7 +47,7 @@ export function armarTransferencia(
   if (!desde || !hacia) throw new Error('La cuenta de la transferencia no existe');
   if (desde.id === hacia.id) throw new Error('No se puede transferir a la misma cuenta');
 
-  const sacaDelAhorro = desde.tipo === 'flexible' && hacia.tipo === 'diaria';
+  const sacaDelAhorro = desde.tipo === 'flexible' && hacia.tipo !== 'flexible';
   const dueno = sacaDelAhorro ? desde : hacia;
   const contraparte = sacaDelAhorro ? hacia : desde;
   const entraAlAhorro = hacia.tipo === 'flexible';

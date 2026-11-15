@@ -1,7 +1,12 @@
 import type { SQLiteDatabase } from 'expo-sqlite';
 
 import { PLAN_INICIAL } from '@/constants/plan.constants';
-import { sembrarCategorias, sembrarCategoriasDelExterior, sembrarCuentas } from '@/lib/db/migraciones';
+import {
+  sembrarCategorias,
+  sembrarBilletera,
+  sembrarCategoriasDelExterior,
+  sembrarCuentas,
+} from '@/lib/db/migraciones';
 
 import type { DatosRepository } from './datos.repository';
 
@@ -23,6 +28,7 @@ export function crearDatosSqlite(db: SQLiteDatabase): DatosRepository {
         await sembrarCategorias(db);
         await sembrarCategoriasDelExterior(db);
         await sembrarCuentas(db);
+        await sembrarBilletera(db);
         for (const [clave, valor] of Object.entries(PLAN_INICIAL)) {
           await db.runAsync(
             'INSERT OR REPLACE INTO plan (clave, valor) VALUES (?, ?)',

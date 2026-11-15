@@ -5,7 +5,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { CampoEtiquetado } from '@/components/campo-etiquetado';
 import { Encabezado } from '@/components/encabezado';
 import { Boton, Chip, Texto } from '@/components/ui';
-import { BANCOS, type BancoId } from '@/constants/bancos.constants';
+import { BANCO_EFECTIVO, BANCOS_REALES, type BancoId } from '@/constants/bancos.constants';
 import { LARGO_MAXIMO_NOMBRE_CUENTA } from '@/constants/cuentas.constants';
 import { MARGEN_PANTALLA } from '@/constants/layout.constants';
 import { FUENTES } from '@/constants/tema.constants';
@@ -38,7 +38,7 @@ export interface FormularioCuentaProps {
   alEliminar: () => void;
 }
 
-const TIPOS: TipoCuenta[] = ['diaria', 'flexible'];
+const TIPOS: TipoCuenta[] = ['diaria', 'flexible', 'efectivo'];
 
 /**
  * Crear y editar una cuenta: banco, nombre, tipo y — si es flexible — la tasa
@@ -58,7 +58,9 @@ export function FormularioCuenta({
   const eliminar = useEliminarCuenta();
   const registros = useCantidadRegistrosCuenta(cuenta?.id).data ?? 0;
 
-  const [banco, setBanco] = useState<BancoId>(cuenta?.banco ?? 'pichincha');
+  const [banco, setBanco] = useState<BancoId>(
+    cuenta && cuenta.banco !== BANCO_EFECTIVO ? cuenta.banco : 'pichincha',
+  );
   const [nombre, setNombre] = useState(cuenta?.nombre ?? '');
   const [tipo, setTipo] = useState<TipoCuenta>(cuenta?.tipo ?? 'flexible');
   const [tasaTexto, setTasaTexto] = useState(() =>
@@ -69,7 +71,9 @@ export function FormularioCuenta({
 
   const tasaBp = interpretarTasa(tasaTexto);
   const saldoInicial = interpretarImporteOCero(saldoTexto);
-  const formulario = { banco, nombre, tipo, tasaBp };
+  // El efectivo no está en ningún banco.
+  const esEfectivo = tipo === 'efectivo';
+  const formulario = { banco: esEfectivo ? BANCO_EFECTIVO : banco, nombre, tipo, tasaBp };
   const validacion = validarCuenta(formulario, existentes, cuenta?.id);
   const errores = validacion.ok ? {} : validacion.errores;
   // Un nombre repetido se avisa al escribir; un campo vacío, sólo al intentar guardar.
@@ -126,18 +130,20 @@ export function FormularioCuenta({
           paddingBottom: 16,
         }}
       >
-        <CampoEtiquetado etiqueta="Banco" error={errores.banco}>
-          <View className="flex-row flex-wrap gap-2" accessibilityRole="radiogroup">
-            {BANCOS.map((opcion) => (
-              <Chip
-                key={opcion.id}
-                texto={opcion.corto}
-                seleccionado={banco === opcion.id}
-                onPress={() => setBanco(opcion.id)}
-              />
-            ))}
-          </View>
-        </CampoEtiquetado>
+        {esEfectivo ? null : (
+          <CampoEtiquetado etiqueta="Banco" error={errores.banco}>
+            <View className="flex-row flex-wrap gap-2" accessibilityRole="radiogroup">
+              {BANCOS_REALES.map((opcion) => (
+                <Chip
+                  key={opcion.id}
+                  texto={opcion.corto}
+                  seleccionado={banco === opcion.id}
+                  onPress={() => setBanco(opcion.id)}
+                />
+              ))}
+            </View>
+          </CampoEtiquetado>
+        )}
 
         <CampoEtiquetado etiqueta="Tipo de cuenta" ayuda={TIPOS_CUENTA[tipo].descripcion}>
           <View className="flex-row gap-2" accessibilityRole="radiogroup">
@@ -157,7 +163,13 @@ export function FormularioCuenta({
           <TextInput
             value={nombre}
             onChangeText={setNombre}
-            placeholder={tipo === 'flexible' ? 'Ej. Cuenta flexible' : 'Ej. Cuenta de ahorros'}
+            placeholder={
+              esEfectivo
+                ? 'Ej. Billetera'
+                : tipo === 'flexible'
+                  ? 'Ej. Cuenta flexible'
+                  : 'Ej. Cuenta de ahorros'
+            }
             placeholderTextColor={colores['texto-suave']}
             maxLength={LARGO_MAXIMO_NOMBRE_CUENTA}
             autoCapitalize="sentences"

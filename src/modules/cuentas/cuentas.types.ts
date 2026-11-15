@@ -7,7 +7,7 @@ import type { FechaIso } from '@/lib/fechas';
  *   tarjeta de débito.
  * - `flexible`: la cuenta de ahorro. Paga interés todos los días.
  */
-export type TipoCuenta = 'diaria' | 'flexible';
+export type TipoCuenta = 'diaria' | 'flexible' | 'efectivo';
 
 export interface Cuenta {
   id: number;

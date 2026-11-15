@@ -6,7 +6,12 @@ import type { CatalogoCategorias } from '@/modules/categorias/categorias.types';
 import type { Cuenta } from '@/modules/cuentas/cuentas.types';
 import type { BorradorGasto, NuevoGasto } from '@/modules/gastos/gastos.types';
 import { LARGO_MAXIMO_NOTA } from '@/modules/gastos/schema/gasto.schema';
-import { cuentaDelGasto, tocaCuenta } from '@/modules/gastos/utils/cuenta-del-gasto';
+import {
+  billeteraDe,
+  cuentaDelGasto,
+  cuentasDeBanco,
+  tocaCuenta,
+} from '@/modules/gastos/utils/cuenta-del-gasto';
 
 /** Lo que entrega `useLocalSearchParams` de expo-router. */
 export type ParametrosEnlace = Record<string, string | string[] | undefined>;
@@ -51,12 +56,13 @@ export interface ContextoEnlace {
   cuentas?: readonly CuentaEnlace[];
 }
 
-type CuentaEnlace = Pick<Cuenta, 'id' | 'nombre' | 'tipo'>;
+type CuentaEnlace = Pick<Cuenta, 'id' | 'nombre' | 'tipo'> & { orden?: number };
 
 /** Formas de nombrar una cuenta por su tipo, sin escribir el nombre exacto. */
 const ALIAS_TIPO_CUENTA: Readonly<Record<Cuenta['tipo'], readonly string[]>> = {
   diaria: ['diaria', 'ahorros', 'debito', 'dia a dia'],
   flexible: ['flexible', 'ahorro', 'flex'],
+  efectivo: ['efectivo', 'billetera', 'cash'],
 };
 
 function leer(params: ParametrosEnlace, claves: readonly string[]): string | undefined {
@@ -165,13 +171,15 @@ export function interpretarEnlaceGasto(
   if (montoCentavos && categoria && metodoPago) {
     const deWallet = esEnlaceWallet(params);
     const cuentaId = borrador.cuentaId ?? contexto.cuentaDiariaId ?? null;
+    const cuentas = (contexto.cuentas ?? []).map((c) => ({ ...c, orden: c.orden ?? 0 }));
+    const billetera = billeteraDe(cuentas);
     return {
       tipo: 'completo',
       gasto: {
         montoCentavos,
         categoria,
         metodoPago,
-        cuentaId: cuentaDelGasto(metodoPago, cuentaId),
+        cuentaId: cuentaDelGasto(metodoPago, cuentaId, billetera),
         nota: borrador.nota ?? null,
         fecha: hoy,
         origen: deWallet ? 'wallet' : 'atajo',
@@ -180,7 +188,7 @@ export function interpretarEnlaceGasto(
         !deWallet &&
         tocaCuenta(metodoPago) &&
         borrador.cuentaId === undefined &&
-        (contexto.cuentas?.length ?? 0) > 1,
+        cuentasDeBanco(cuentas).length > 1,
     };
   }
   return { tipo: 'incompleto', borrador };

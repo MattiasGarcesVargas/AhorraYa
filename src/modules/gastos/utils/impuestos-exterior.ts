@@ -84,14 +84,12 @@ const IMPUESTOS: readonly TipoImpuesto[] = ['iva', 'isd'];
  * forma de pago, cuenta y fecha. Un impuesto de menos de un centavo no se crea.
  */
 export function impuestosDe(padre: Gasto, etiqueta: string): NuevoGasto[] {
-  return IMPUESTOS.map(
-    (impuesto): NuevoGasto => ({
-      ...cambiosImpuesto(padre, impuesto, etiqueta),
-      origen: padre.origen,
-      gastoPadreId: padre.id,
-      impuesto,
-    }),
-  ).filter((gasto) => gasto.montoCentavos > 0);
+  return IMPUESTOS.map((impuesto): NuevoGasto => ({
+    ...cambiosImpuesto(padre, impuesto, etiqueta),
+    origen: padre.origen,
+    gastoPadreId: padre.id,
+    impuesto,
+  })).filter((gasto) => gasto.montoCentavos > 0);
 }
 
 /** El ISD va y vuelve: mueve el saldo de la cuenta pero no es gasto del presupuesto. */

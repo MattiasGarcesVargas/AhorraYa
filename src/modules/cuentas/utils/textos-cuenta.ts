@@ -18,10 +18,16 @@ export const TIPOS_CUENTA: Record<
     descripcion: 'Tu ahorro. Paga interés todos los días sobre lo que tengas.',
     icono: 'trending-up-outline',
   },
+  efectivo: {
+    nombre: 'Efectivo',
+    descripcion: 'Tu billetera: la plata en efectivo que llevas. Baja sola al pagar en efectivo.',
+    icono: 'cash-outline',
+  },
 };
 
 /** `Pichincha · Flexible · 5% anual` */
 export function subtituloCuenta(cuenta: Cuenta, tasaBp = 0): string {
+  if (cuenta.tipo === 'efectivo') return 'Efectivo · lo que llevas encima';
   return [
     bancoPorId(cuenta.banco).corto,
     TIPOS_CUENTA[cuenta.tipo].nombre,

@@ -116,14 +116,16 @@ function ConCuenta({
       <ElegirCuentaEnlace
         gasto={gasto}
         categoria={categoria}
-        saldos={saldos}
+        saldos={saldos.filter((saldo) => saldo.cuenta.tipo !== 'efectivo')}
         alElegir={setElegida}
         alCancelar={() => (router.canGoBack() ? router.back() : router.replace('/'))}
       />
     );
   }
 
-  const saleDelAhorro = saldos.some((s) => s.cuenta.id === cuentaId && s.cuenta.tipo === 'flexible');
+  const saleDelAhorro = saldos.some(
+    (s) => s.cuenta.id === cuentaId && s.cuenta.tipo === 'flexible',
+  );
   return <Confirmacion gasto={listo} saleDelAhorro={saleDelAhorro} />;
 }
 

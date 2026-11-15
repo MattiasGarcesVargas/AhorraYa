@@ -123,7 +123,7 @@ export function desdeMovimientoCuenta(
     id: movimiento.id,
     fecha: movimiento.fecha,
     creadoEn: movimiento.creadoEn,
-    titulo: cuenta?.tipo === 'diaria' ? textos.diaria : textos.ahorro,
+    titulo: cuenta?.tipo === 'flexible' ? textos.ahorro : textos.diaria,
     detalle: [movimiento.nota, cuenta?.nombre].filter(Boolean).join(' · ') || 'Ahorro',
     icono: textos.icono,
     color: 'tinta',

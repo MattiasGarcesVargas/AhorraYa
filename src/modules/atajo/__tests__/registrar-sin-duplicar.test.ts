@@ -106,7 +106,9 @@ describe('registrarSinDuplicar', () => {
     const reloj = { ahora: new Date() };
     const repo = repositorioEnMemoria(reloj);
 
-    await expect(registrarSinDuplicar(repos(repo), { ...CAFE, montoCentavos: 0 })).rejects.toThrow();
+    await expect(
+      registrarSinDuplicar(repos(repo), { ...CAFE, montoCentavos: 0 }),
+    ).rejects.toThrow();
     expect(repo.todos).toHaveLength(0);
   });
 });
