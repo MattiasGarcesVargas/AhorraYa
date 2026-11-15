@@ -186,7 +186,8 @@ describe('libro de una cuenta (debe y haber)', () => {
       'Retiro',
       'Interés ganado',
     ]);
-    expect(libro.lineas[0].detalle).toBe('15 días');
+    // El 1 de noviembre de 2026 es domingo: lo suyo ya se pagó el viernes anterior.
+    expect(libro.lineas[0].detalle).toBe('14 días');
     expect(libro.lineas[3]).toMatchObject({ sale: 2_000, detalle: 'Transporte · Uber' });
     expect(libro.interes).toBeGreaterThan(0);
     // Las líneas de interés no se editan: se calculan.
