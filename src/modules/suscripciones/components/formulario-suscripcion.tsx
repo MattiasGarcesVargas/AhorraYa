@@ -55,9 +55,11 @@ export function FormularioSuscripcion({ suscripcion, alTerminar }: FormularioSus
   const [diaTexto, setDiaTexto] = useState(suscripcion ? String(suscripcion.diaCobro) : '');
   const [categoria, setCategoria] = useState<string | null>(suscripcion?.categoria ?? null);
   const [metodo, setMetodo] = useState<MetodoPagoId>(suscripcion?.metodoPago ?? 'debito');
-  const [cuenta, setCuenta] = useState<number | null>(() =>
-    suscripcion ? suscripcion.cuentaId : (cuentaPrincipal(cuentas, 'diaria')?.id ?? null),
-  );
+  // `undefined` = todavía no la tocó: se propone la del día a día. Se calcula al
+  // pintar y no al montar, porque las cuentas pueden llegar un instante después.
+  const [cuentaElegida, setCuenta] = useState<number | null | undefined>(suscripcion?.cuentaId);
+  const cuenta =
+    cuentaElegida !== undefined ? cuentaElegida : (cuentaPrincipal(cuentas, 'diaria')?.id ?? null);
   const [activa, setActiva] = useState(suscripcion?.activa ?? true);
   const [cobrarHoy, setCobrarHoy] = useState(false);
   const [intentoGuardar, setIntentoGuardar] = useState(false);
