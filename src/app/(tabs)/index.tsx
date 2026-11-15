@@ -5,7 +5,7 @@ import { EstadoVacio } from '@/components/estado-vacio';
 import { Pantalla } from '@/components/pantalla';
 import { Seccion } from '@/components/seccion';
 import { SelectorPeriodo } from '@/components/selector-periodo';
-import { Boton, Separador, Superficie } from '@/components/ui';
+import { Boton, Separador } from '@/components/ui';
 import { formatFechaLarga, hoyIso } from '@/lib/fechas';
 import { PuntoDePartida } from '@/modules/ahorro/components/punto-de-partida';
 import { ResumenAhorro } from '@/modules/ahorro/components/resumen-ahorro';
@@ -47,11 +47,11 @@ export default function InicioScreen() {
         }}
       />
 
-      <View className="mt-3 gap-3">
+      <View className="mt-4 gap-4">
         {resumen ? (
           <TarjetaDisponible resumen={resumen} tipo={periodo.tipo} />
         ) : (
-          <View className="h-[232px] rounded-xl bg-superficie" />
+          <View className="h-[232px] rounded-xl bg-superficie" accessibilityElementsHidden />
         )}
         <Boton texto="Registrar gasto" icono="add" tamano="lg" ancho onPress={nuevoGasto} />
         {resumen && esActual && resumen.esPeriodoDeCobro ? (
@@ -86,7 +86,7 @@ export default function InicioScreen() {
             }
           >
             {resumen.ultimosGastos.length > 0 ? (
-              <Superficie relleno="ninguno" className="px-4 py-1">
+              <View>
                 {resumen.ultimosGastos.map((gasto, i) => (
                   <View key={gasto.id}>
                     {i > 0 ? <Separador sangria={52} /> : null}
@@ -97,14 +97,14 @@ export default function InicioScreen() {
                     />
                   </View>
                 ))}
-              </Superficie>
+              </View>
             ) : (
               <EstadoVacio
                 icono="receipt-outline"
                 titulo={
                   esActual ? 'Aún no hay gastos en este periodo' : 'Sin gastos en este periodo'
                 }
-                mensaje="Regístralos el mismo día, sin juzgarte: el primer mes es para ver en qué se te va el dinero."
+                mensaje="Anótalos el mismo día. El primer mes sirve para ver en qué se va tu dinero."
                 accion={
                   esActual ? { texto: 'Registrar el primero', alPulsar: nuevoGasto } : undefined
                 }

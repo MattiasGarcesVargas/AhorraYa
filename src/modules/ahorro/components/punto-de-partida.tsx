@@ -22,7 +22,7 @@ export function PuntoDePartida() {
 
   return (
     <Superficie variante="acento" relleno="lg">
-      <Texto peso="bold" tono="acento">
+      <Texto peso="semibold" tono="acento">
         ¿Cuánto tienes hoy en tus cuentas?
       </Texto>
       <Texto variante="detalle" tono="acento" className="mt-1">
@@ -34,6 +34,7 @@ export function PuntoDePartida() {
             key={cuenta.id}
             texto={cuenta.nombre}
             icono="add"
+            variante="contorno"
             tamano="sm"
             onPress={() =>
               router.push({

@@ -59,10 +59,10 @@ export function BarraPestanas({
             accessibilityState={{ selected: activa }}
             accessibilityLabel={titulo}
             onPress={pulsar}
-            className="flex-1 items-center gap-1 pt-2"
+            className="min-h-12 flex-1 items-center gap-1 pt-2"
           >
             {options.tabBarIcon?.({ focused: activa, color, size: 24 })}
-            <Texto variante="mini" peso={activa ? 'bold' : 'semibold'} style={{ color }}>
+            <Texto variante="mini" peso={activa ? 'semibold' : 'medium'} style={{ color }}>
               {titulo}
             </Texto>
           </Pressable>

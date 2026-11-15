@@ -1,7 +1,7 @@
 import { Pressable, View } from 'react-native';
 import { useRouter } from 'expo-router';
 
-import { AnilloProgreso, Icono, Monto, Superficie, Texto } from '@/components/ui';
+import { AnilloProgreso, Icono, Monto, Texto } from '@/components/ui';
 import { porcentaje } from '@/lib/dinero';
 import { hoyIso } from '@/lib/fechas';
 import { formatMoneda, formatMonedaEntera, formatPorcentaje } from '@/lib/format';
@@ -36,7 +36,7 @@ export function ResumenAhorro() {
       onPress={() => router.navigate('/cuentas')}
       className="active:opacity-80"
     >
-      <Superficie className="flex-row items-center gap-4">
+      <View className="min-h-16 flex-row items-center gap-4">
         <AnilloProgreso
           valor={avance}
           tamano={60}
@@ -44,7 +44,7 @@ export function ResumenAhorro() {
           color="primario"
           pista="superficie-alta"
         >
-          <Texto variante="mini" peso="bold" numerico>
+          <Texto variante="mini" peso="semibold" numerico>
             {formatPorcentaje(Math.min(avance, 999))}
           </Texto>
         </AnilloProgreso>
@@ -62,7 +62,7 @@ export function ResumenAhorro() {
           </Texto>
         </View>
         <Icono nombre="chevron-forward" tamano={18} color="texto-suave" />
-      </Superficie>
+      </View>
     </Pressable>
   );
 }

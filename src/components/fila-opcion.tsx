@@ -26,9 +26,7 @@ export function FilaOpcion({ titulo, detalle, valor, icono, peligro, alPulsar }:
         <Icono nombre={icono} tamano={20} color={peligro ? 'peligro' : 'texto-suave'} />
       ) : null}
       <View className="flex-1">
-        <Texto peso="semibold" tono={peligro ? 'peligro' : 'normal'}>
-          {titulo}
-        </Texto>
+        <Texto tono={peligro ? 'peligro' : 'normal'}>{titulo}</Texto>
         {detalle ? (
           <Texto variante="detalle" tono="suave">
             {detalle}
@@ -36,7 +34,7 @@ export function FilaOpcion({ titulo, detalle, valor, icono, peligro, alPulsar }:
         ) : null}
       </View>
       {valor ? (
-        <Texto peso="semibold" tono="suave" numerico>
+        <Texto tono="suave" numerico>
           {valor}
         </Texto>
       ) : null}

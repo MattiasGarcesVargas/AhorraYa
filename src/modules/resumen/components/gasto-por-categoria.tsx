@@ -1,7 +1,7 @@
 import { View } from 'react-native';
 
 import { AvatarCategoria } from '@/components/avatar-categoria';
-import { BarraProgreso, Separador, Superficie, Texto } from '@/components/ui';
+import { BarraProgreso, Separador, Texto } from '@/components/ui';
 import { formatMoneda, formatMonedaEntera } from '@/lib/format';
 import { useTema } from '@/providers/tema-provider';
 
@@ -16,7 +16,7 @@ function BarraReparto({ categorias }: { categorias: ResumenCategoria[] }) {
 
   return (
     <View
-      className="mb-1 h-2.5 flex-row overflow-hidden rounded-full"
+      className="mb-2 h-2 flex-row overflow-hidden rounded-full"
       importantForAccessibility="no-hide-descendants"
     >
       {conGasto.map((c, i) => (
@@ -56,8 +56,8 @@ function FilaCategoria({ item }: { item: ResumenCategoria }) {
       <AvatarCategoria icono={categoria.icono} color={categoria.color} tamano={36} />
       <View className="flex-1 gap-1.5">
         <View className="flex-row items-baseline justify-between">
-          <Texto peso="semibold">{categoria.nombre}</Texto>
-          <Texto variante="detalle" peso="semibold" tono={excedido ? 'peligro' : 'suave'} numerico>
+          <Texto>{categoria.nombre}</Texto>
+          <Texto variante="detalle" tono={excedido ? 'peligro' : 'suave'} numerico>
             {estado}
           </Texto>
         </View>
@@ -82,16 +82,16 @@ export function GastoPorCategoria({ categorias }: { categorias: ResumenCategoria
   const excedidas = categorias.filter((c) => c.excedido);
 
   return (
-    <View className="gap-3">
+    <View className="gap-2">
       <BarraReparto categorias={categorias} />
-      <Superficie relleno="ninguno" className="px-4">
+      <View>
         {categorias.map((item, i) => (
           <View key={item.categoria.id}>
             {i > 0 ? <Separador sangria={48} /> : null}
             <FilaCategoria item={item} />
           </View>
         ))}
-      </Superficie>
+      </View>
 
       {excedidas.length > 0 ? (
         <View className="rounded-lg bg-peligro-suave px-4 py-3">

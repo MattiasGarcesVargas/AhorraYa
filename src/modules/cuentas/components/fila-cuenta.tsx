@@ -22,22 +22,20 @@ export function FilaCuenta({ saldo, alPulsar }: FilaCuentaProps) {
       accessibilityRole="button"
       accessibilityLabel={`${cuenta.nombre}, ${formatMoneda(saldo.saldo)}`}
       onPress={alPulsar}
-      className="flex-row items-center gap-3 px-4 py-3 active:bg-superficie-alta"
+      className="min-h-16 flex-row items-center gap-3 px-4 py-3 active:bg-superficie-alta"
     >
       <AvatarCategoria
         icono={TIPOS_CUENTA[cuenta.tipo].icono}
         color={bancoPorId(cuenta.banco).color}
       />
       <View className="flex-1">
-        <Texto peso="semibold" numberOfLines={1}>
-          {cuenta.nombre}
-        </Texto>
+        <Texto numberOfLines={1}>{cuenta.nombre}</Texto>
         <Texto variante="detalle" tono="suave" numberOfLines={1}>
           {subtituloCuenta(cuenta, saldo.tasaBp)}
         </Texto>
       </View>
       <View className="items-end">
-        <Texto peso="bold" numerico>
+        <Texto peso="medium" numerico>
           {formatMoneda(saldo.saldo)}
         </Texto>
         {saldo.interesDiario > 0 ? (

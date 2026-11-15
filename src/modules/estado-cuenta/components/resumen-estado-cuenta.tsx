@@ -12,7 +12,7 @@ function Dato({ etiqueta, valor, tono }: { etiqueta: string; valor: Centavos; to
       <Texto variante="mini" tono="tinta-suave">
         {etiqueta}
       </Texto>
-      <Texto variante="subtitulo" tono={tono ?? 'tinta'} numerico className="mt-0.5">
+      <Texto variante="cuerpo" peso="semibold" tono={tono ?? 'tinta'} numerico className="mt-0.5">
         {formatMoneda(valor)}
       </Texto>
     </View>
@@ -25,7 +25,7 @@ export function ResumenEstadoCuenta({ estado }: { estado: EstadoCuenta }) {
   const mayor = estado.categorias.find((c) => c.gastado > 0);
 
   return (
-    <View className="gap-3">
+    <View className="gap-4">
       <Superficie variante="tinta" relleno="lg" className="gap-4">
         <View className="flex-row gap-4">
           <Dato etiqueta="Ingresos" valor={totales.ingresos} />
@@ -40,19 +40,16 @@ export function ResumenEstadoCuenta({ estado }: { estado: EstadoCuenta }) {
           <Texto variante="detalle" tono="tinta-suave">
             Resultado del mes
           </Texto>
-          <Texto peso="bold" tono={totales.flujoLibre >= 0 ? 'menta' : 'peligro'} numerico>
+          <Texto peso="semibold" tono={totales.flujoLibre >= 0 ? 'menta' : 'peligro'} numerico>
             {formatMonedaConSigno(totales.flujoLibre)}
           </Texto>
         </View>
       </Superficie>
 
-      <Superficie className="gap-1">
+      <View className="gap-1 px-1">
         <Texto variante="detalle" numerico>
-          <Texto variante="detalle" peso="bold">
-            {estado.movimientos.length}
-          </Texto>{' '}
-          movimientos · {estado.cantidadGastos} gastos · {formatMoneda(estado.promedioDiario)} al
-          día
+          {estado.movimientos.length} movimientos · {estado.cantidadGastos} gastos ·{' '}
+          {formatMoneda(estado.promedioDiario)} al día
         </Texto>
         <Texto variante="detalle" tono={meta.cumplida ? 'primario' : 'suave'} numerico>
           {meta.cumplida
@@ -69,7 +66,7 @@ export function ResumenEstadoCuenta({ estado }: { estado: EstadoCuenta }) {
             El mes aún no termina: las cifras son hasta hoy.
           </Texto>
         ) : null}
-      </Superficie>
+      </View>
     </View>
   );
 }
