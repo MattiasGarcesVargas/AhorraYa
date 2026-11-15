@@ -1,7 +1,8 @@
-import { useState, type ReactNode } from 'react';
+import { useState } from 'react';
 import { ScrollView, TextInput, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
+import { CampoEtiquetado } from '@/components/campo-etiquetado';
 import { Encabezado } from '@/components/encabezado';
 import { Boton, Chip, Texto } from '@/components/ui';
 import { BANCOS, type BancoId } from '@/constants/bancos.constants';
@@ -35,36 +36,6 @@ export interface FormularioCuentaProps {
   alTerminar: () => void;
   /** Tras eliminar la cuenta. */
   alEliminar: () => void;
-}
-
-function Campo({
-  etiqueta,
-  error,
-  ayuda,
-  children,
-}: {
-  etiqueta: string;
-  error?: string;
-  ayuda?: string;
-  children: ReactNode;
-}) {
-  return (
-    <View className="mt-6">
-      <Texto variante="detalle" peso="semibold" tono="suave" className="mb-2">
-        {etiqueta}
-      </Texto>
-      {children}
-      {error ? (
-        <Texto variante="detalle" tono="peligro" className="mt-1.5">
-          {error}
-        </Texto>
-      ) : ayuda ? (
-        <Texto variante="detalle" tono="suave" className="mt-1.5">
-          {ayuda}
-        </Texto>
-      ) : null}
-    </View>
-  );
 }
 
 const TIPOS: TipoCuenta[] = ['diaria', 'flexible'];
@@ -140,7 +111,7 @@ export function FormularioCuenta({
     });
   };
 
-  const estiloCampo = { fontFamily: FUENTES.semibold };
+  const estiloCampo = { fontFamily: FUENTES.medium };
 
   return (
     <View className="flex-1 bg-fondo">
@@ -152,10 +123,10 @@ export function FormularioCuenta({
         automaticallyAdjustKeyboardInsets
         contentContainerStyle={{
           paddingHorizontal: MARGEN_PANTALLA,
-          paddingBottom: insets.bottom + 32,
+          paddingBottom: 16,
         }}
       >
-        <Campo etiqueta="Banco" error={errores.banco}>
+        <CampoEtiquetado etiqueta="Banco" error={errores.banco}>
           <View className="flex-row flex-wrap gap-2" accessibilityRole="radiogroup">
             {BANCOS.map((opcion) => (
               <Chip
@@ -166,9 +137,9 @@ export function FormularioCuenta({
               />
             ))}
           </View>
-        </Campo>
+        </CampoEtiquetado>
 
-        <Campo etiqueta="Tipo de cuenta" ayuda={TIPOS_CUENTA[tipo].descripcion}>
+        <CampoEtiquetado etiqueta="Tipo de cuenta" ayuda={TIPOS_CUENTA[tipo].descripcion}>
           <View className="flex-row gap-2" accessibilityRole="radiogroup">
             {TIPOS.map((opcion) => (
               <Chip
@@ -180,9 +151,9 @@ export function FormularioCuenta({
               />
             ))}
           </View>
-        </Campo>
+        </CampoEtiquetado>
 
-        <Campo etiqueta="Nombre" error={errorNombre}>
+        <CampoEtiquetado etiqueta="Nombre" error={errorNombre}>
           <TextInput
             value={nombre}
             onChangeText={setNombre}
@@ -192,13 +163,13 @@ export function FormularioCuenta({
             autoCapitalize="sentences"
             returnKeyType="done"
             accessibilityLabel="Nombre de la cuenta"
-            className="h-12 rounded-lg bg-superficie px-4 text-base text-texto"
+            className="h-12 rounded-lg border border-borde px-4 text-base text-texto"
             style={estiloCampo}
           />
-        </Campo>
+        </CampoEtiquetado>
 
         {tipo === 'flexible' ? (
-          <Campo
+          <CampoEtiquetado
             etiqueta="Interés anual"
             error={errores.tasaBp}
             ayuda={
@@ -207,7 +178,7 @@ export function FormularioCuenta({
                 : 'La tasa anual que te da el banco. El interés se suma solo cada día.'
             }
           >
-            <View className="h-12 flex-row items-center rounded-lg bg-superficie px-4">
+            <View className="h-12 flex-row items-center rounded-lg border border-borde px-4">
               <TextInput
                 value={tasaTexto}
                 onChangeText={setTasaTexto}
@@ -219,21 +190,19 @@ export function FormularioCuenta({
                 className="flex-1 text-base text-texto"
                 style={estiloCampo}
               />
-              <Texto peso="bold" tono="suave">
-                % al año
-              </Texto>
+              <Texto tono="suave">% al año</Texto>
             </View>
-          </Campo>
+          </CampoEtiquetado>
         ) : null}
 
         {cuenta ? null : (
-          <Campo
+          <CampoEtiquetado
             etiqueta="¿Cuánto hay hoy en la cuenta?"
             error={errorSaldo}
             ayuda="El saldo que ves ahora en el banco. Puedes dejarlo en 0 y anotarlo después."
           >
-            <View className="h-12 flex-row items-center rounded-lg bg-superficie px-4">
-              <Texto peso="bold" tono="suave" className="mr-1">
+            <View className="h-12 flex-row items-center rounded-lg border border-borde px-4">
+              <Texto tono="suave" className="mr-1">
                 $
               </Texto>
               <TextInput
@@ -248,44 +217,49 @@ export function FormularioCuenta({
                 style={estiloCampo}
               />
             </View>
-          </Campo>
+          </CampoEtiquetado>
         )}
 
         {guardar.isError ? (
-          <Texto variante="detalle" tono="peligro" className="mt-4">
+          <Texto variante="detalle" tono="peligro" className="mb-4">
             {guardar.error.message}
           </Texto>
         ) : null}
 
-        <View className="mt-8 gap-3">
-          <Boton
-            texto={cuenta ? 'Guardar cambios' : 'Crear cuenta'}
-            tamano="lg"
-            ancho
-            cargando={guardar.isPending}
-            onPress={alGuardar}
-          />
-          {cuenta ? (
-            <>
-              <Boton
-                texto="Eliminar cuenta"
-                icono="trash-outline"
-                variante="peligro"
-                ancho
-                disabled={registros > 0}
-                cargando={eliminar.isPending}
-                onPress={alEliminar}
-              />
-              {registros > 0 ? (
-                <Texto variante="mini" tono="suave" className="text-center">
-                  Tiene {registros} {registros === 1 ? 'movimiento' : 'movimientos'}: una cuenta con
-                  historia no se elimina, para no perder el rastro de esa plata.
-                </Texto>
-              ) : null}
-            </>
-          ) : null}
-        </View>
+        {cuenta ? (
+          <View className="gap-2">
+            <Boton
+              texto="Eliminar cuenta"
+              icono="trash-outline"
+              variante="peligro"
+              tamano="sm"
+              ancho
+              disabled={registros > 0}
+              cargando={eliminar.isPending}
+              onPress={alEliminar}
+            />
+            {registros > 0 ? (
+              <Texto variante="mini" tono="suave" className="text-center">
+                Tiene {registros} {registros === 1 ? 'movimiento' : 'movimientos'}: una cuenta con
+                historia no se elimina, para no perder el rastro de esa plata.
+              </Texto>
+            ) : null}
+          </View>
+        ) : null}
       </ScrollView>
+
+      <View
+        className="border-t border-borde pt-3"
+        style={{ paddingHorizontal: MARGEN_PANTALLA, paddingBottom: Math.max(insets.bottom, 16) }}
+      >
+        <Boton
+          texto={cuenta ? 'Guardar cambios' : 'Crear cuenta'}
+          tamano="lg"
+          ancho
+          cargando={guardar.isPending}
+          onPress={alGuardar}
+        />
+      </View>
     </View>
   );
 }

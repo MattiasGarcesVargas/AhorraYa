@@ -22,14 +22,14 @@ export function SelectorDia({ valor, alCambiar }: SelectorDiaProps) {
   };
 
   return (
-    <View className="flex-row items-center justify-between rounded-full bg-superficie px-1">
+    <View className="h-12 flex-row items-center justify-between rounded-lg border border-borde px-1">
       <BotonIcono
         icono="chevron-back"
         etiqueta="Día anterior"
         variante="fantasma"
         onPress={() => mover(-1)}
       />
-      <Texto variante="detalle" peso="semibold" accessibilityLiveRegion="polite">
+      <Texto peso="medium" accessibilityLiveRegion="polite">
         {formatDiaRelativo(valor, hoy)}
       </Texto>
       <BotonIcono

@@ -1,7 +1,8 @@
-import { useState, type ReactNode } from 'react';
+import { useState } from 'react';
 import { ScrollView, Switch, TextInput, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
+import { CampoEtiquetado } from '@/components/campo-etiquetado';
 import { Encabezado } from '@/components/encabezado';
 import { Boton, Texto } from '@/components/ui';
 import { MARGEN_PANTALLA } from '@/constants/layout.constants';
@@ -34,36 +35,6 @@ export interface FormularioSuscripcionProps {
   /** Sin suscripción: se crea una nueva. */
   suscripcion?: Suscripcion;
   alTerminar: () => void;
-}
-
-function Campo({
-  etiqueta,
-  error,
-  ayuda,
-  children,
-}: {
-  etiqueta: string;
-  error?: string;
-  ayuda?: string;
-  children: ReactNode;
-}) {
-  return (
-    <View className="mt-6">
-      <Texto variante="detalle" peso="semibold" tono="suave" className="mb-2">
-        {etiqueta}
-      </Texto>
-      {children}
-      {error ? (
-        <Texto variante="detalle" tono="peligro" className="mt-1.5">
-          {error}
-        </Texto>
-      ) : ayuda ? (
-        <Texto variante="detalle" tono="suave" className="mt-1.5">
-          {ayuda}
-        </Texto>
-      ) : null}
-    </View>
-  );
 }
 
 /** Crear y editar una suscripción que se cobra sola un día fijo de cada mes. */
@@ -158,10 +129,10 @@ export function FormularioSuscripcion({ suscripcion, alTerminar }: FormularioSus
         automaticallyAdjustKeyboardInsets
         contentContainerStyle={{
           paddingHorizontal: MARGEN_PANTALLA,
-          paddingBottom: insets.bottom + 32,
+          paddingBottom: 16,
         }}
       >
-        <Campo etiqueta="Nombre" error={ver('nombre', nombre.trim() !== '')}>
+        <CampoEtiquetado etiqueta="Nombre" error={ver('nombre', nombre.trim() !== '')}>
           <TextInput
             value={nombre}
             onChangeText={setNombre}
@@ -170,18 +141,18 @@ export function FormularioSuscripcion({ suscripcion, alTerminar }: FormularioSus
             maxLength={LARGO_MAXIMO_NOMBRE_SUSCRIPCION}
             returnKeyType="done"
             accessibilityLabel="Nombre de la suscripción"
-            className="h-12 rounded-lg bg-superficie px-4 text-base text-texto"
-            style={{ fontFamily: FUENTES.semibold }}
+            className="h-12 rounded-lg border border-borde px-4 text-base text-texto"
+            style={{ fontFamily: FUENTES.medium }}
           />
-        </Campo>
+        </CampoEtiquetado>
 
-        <Campo
+        <CampoEtiquetado
           etiqueta="Monto al mes"
           error={ver('montoCentavos', montoTexto !== '')}
           ayuda="Lo que cuesta antes de impuestos. Si es una app del exterior pagada con tarjeta, el IVA y el ISD se suman solos."
         >
-          <View className="h-12 flex-row items-center rounded-lg bg-superficie px-4">
-            <Texto peso="bold" tono="suave" className="mr-1">
+          <View className="h-12 flex-row items-center rounded-lg border border-borde px-4">
+            <Texto tono="suave" className="mr-1">
               $
             </Texto>
             <TextInput
@@ -192,12 +163,16 @@ export function FormularioSuscripcion({ suscripcion, alTerminar }: FormularioSus
               keyboardType="decimal-pad"
               accessibilityLabel="Monto mensual"
               className="flex-1 text-base text-texto"
-              style={{ fontFamily: FUENTES.semibold, fontVariant: ['tabular-nums'] }}
+              style={{ fontFamily: FUENTES.medium, fontVariant: ['tabular-nums'] }}
             />
           </View>
-        </Campo>
+        </CampoEtiquetado>
 
-        <Campo etiqueta="Día de cobro" error={ver('diaCobro', diaTexto !== '')} ayuda={ayudaDia}>
+        <CampoEtiquetado
+          etiqueta="Día de cobro"
+          error={ver('diaCobro', diaTexto !== '')}
+          ayuda={ayudaDia}
+        >
           <TextInput
             value={diaTexto}
             onChangeText={(texto) => setDiaTexto(texto.replace(/\D/g, '').slice(0, 2))}
@@ -206,13 +181,13 @@ export function FormularioSuscripcion({ suscripcion, alTerminar }: FormularioSus
             keyboardType="number-pad"
             maxLength={2}
             accessibilityLabel="Día del mes en que se cobra"
-            className="h-12 rounded-lg bg-superficie px-4 text-base text-texto"
-            style={{ fontFamily: FUENTES.semibold, fontVariant: ['tabular-nums'] }}
+            className="h-12 rounded-lg border border-borde px-4 text-base text-texto"
+            style={{ fontFamily: FUENTES.medium, fontVariant: ['tabular-nums'] }}
           />
-        </Campo>
+        </CampoEtiquetado>
 
         {hoyEsElDia ? (
-          <View className="mt-4 flex-row items-center justify-between gap-3">
+          <View className="-mt-2 mb-5 min-h-12 flex-row items-center justify-between gap-3">
             <Texto className="flex-1">Cobrar también la de hoy</Texto>
             <Switch
               value={cobrarHoy}
@@ -223,28 +198,28 @@ export function FormularioSuscripcion({ suscripcion, alTerminar }: FormularioSus
           </View>
         ) : null}
 
-        <Campo etiqueta="Categoría" error={ver('categoria', false)}>
+        <CampoEtiquetado etiqueta="Categoría" error={ver('categoria', false)}>
           <SelectorCategoria categorias={categorias} valor={categoria} alCambiar={setCategoria} />
-        </Campo>
+        </CampoEtiquetado>
 
-        <Campo etiqueta="Forma de pago">
+        <CampoEtiquetado etiqueta="Forma de pago">
           <SelectorMetodoPago valor={metodo} alCambiar={setMetodo} />
-        </Campo>
+        </CampoEtiquetado>
 
         {eligeCuenta ? (
-          <Campo etiqueta="Sale de">
+          <CampoEtiquetado etiqueta="Sale de">
             <SelectorCuenta
               cuentas={cuentas}
               valor={cuenta}
               alCambiar={setCuenta}
               ninguna="Ninguna"
             />
-          </Campo>
+          </CampoEtiquetado>
         ) : null}
 
-        <View className="mt-6 flex-row items-center justify-between gap-3">
+        <View className="mb-5 min-h-12 flex-row items-center justify-between gap-3">
           <View className="flex-1">
-            <Texto peso="semibold">Activa</Texto>
+            <Texto peso="medium">Activa</Texto>
             <Texto variante="detalle" tono="suave">
               Pausada no se cobra, pero se conserva.
             </Texto>
@@ -257,28 +232,32 @@ export function FormularioSuscripcion({ suscripcion, alTerminar }: FormularioSus
           />
         </View>
 
-        <Boton
-          texto={editando ? 'Guardar cambios' : 'Crear suscripción'}
-          tamano="lg"
-          ancho
-          className="mt-8"
-          cargando={guardar.isPending}
-          disabled={intentoGuardar && !validacion.ok}
-          onPress={alGuardar}
-        />
-
         {editando ? (
           <Boton
             texto="Eliminar suscripción"
             icono="trash-outline"
             variante="peligro"
+            tamano="sm"
             ancho
-            className="mt-6"
             cargando={eliminar.isPending}
             onPress={alEliminar}
           />
         ) : null}
       </ScrollView>
+
+      <View
+        className="border-t border-borde pt-3"
+        style={{ paddingHorizontal: MARGEN_PANTALLA, paddingBottom: Math.max(insets.bottom, 16) }}
+      >
+        <Boton
+          texto={editando ? 'Guardar cambios' : 'Crear suscripción'}
+          tamano="lg"
+          ancho
+          cargando={guardar.isPending}
+          disabled={intentoGuardar && !validacion.ok}
+          onPress={alGuardar}
+        />
+      </View>
     </View>
   );
 }

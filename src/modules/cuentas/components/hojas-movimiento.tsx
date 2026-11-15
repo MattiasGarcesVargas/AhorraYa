@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { Pressable, Switch, View } from 'react-native';
 
 import { CampoDescripcion } from '@/components/campo-descripcion';
+import { CampoEtiquetado } from '@/components/campo-etiquetado';
 import { HojaMonto } from '@/components/hoja-monto';
 import { SelectorDia } from '@/components/selector-dia';
 import { Boton, Chip, Texto } from '@/components/ui';
@@ -36,14 +37,6 @@ interface PropsHoja {
   alTerminar: () => void;
 }
 
-function Etiqueta({ children }: { children: string }) {
-  return (
-    <Texto variante="detalle" peso="semibold" tono="suave" className="mb-2 mt-5">
-      {children}
-    </Texto>
-  );
-}
-
 function lasOtras(cuenta: Cuenta, saldos: readonly SaldoCuenta[]): Cuenta[] {
   return saldos.map((s) => s.cuenta).filter((otra) => otra.id !== cuenta.id);
 }
@@ -75,19 +68,20 @@ function SelectorOrigenAporte({
   alCambiar: (origen: OrigenAporte) => void;
 }) {
   return (
-    <>
-      <Etiqueta>¿De dónde viene?</Etiqueta>
+    <CampoEtiquetado
+      etiqueta="De dónde viene"
+      ayuda={
+        valor === 'sueldo'
+          ? 'Cuenta para el aporte de tu cobro y para la meta del mes.'
+          : 'Suma a la meta del mes, pero no reemplaza el aporte de tu cobro.'
+      }
+    >
       <View className="flex-row flex-wrap gap-2" accessibilityRole="radiogroup">
         {ORIGENES_APORTE.map(({ id, texto }) => (
           <Chip key={id} texto={texto} seleccionado={valor === id} onPress={() => alCambiar(id)} />
         ))}
       </View>
-      <Texto variante="mini" tono="suave" className="mt-2">
-        {valor === 'sueldo'
-          ? 'Cuenta para el aporte de tu cobro y para la meta del mes.'
-          : 'Suma a la meta del mes, pero no reemplaza el aporte de tu cobro.'}
-      </Texto>
-    </>
+    </CampoEtiquetado>
   );
 }
 
@@ -154,28 +148,27 @@ export function HojaAporte({ saldo, saldos, alTerminar, alAnotarSaldoInicial }: 
         <Pressable
           accessibilityRole="button"
           onPress={alAnotarSaldoInicial}
-          className="rounded-lg bg-acento px-4 py-3 active:opacity-80"
+          className="mb-5 min-h-11 justify-center active:opacity-70"
         >
-          <Texto variante="detalle" peso="bold" tono="acento">
-            ¿Es plata que ya tenías en esta cuenta?
-          </Texto>
-          <Texto variante="detalle" tono="acento">
-            Entonces no es un aporte: toca aquí y anótala como saldo inicial.
+          <Texto variante="detalle" tono="suave">
+            ¿Es plata que ya tenías en esta cuenta?{' '}
+            <Texto variante="detalle" peso="semibold" tono="primario">
+              Anótala como saldo inicial
+            </Texto>
           </Texto>
         </Pressable>
       ) : null}
       {otras.length > 0 ? (
-        <>
-          <Etiqueta>¿De dónde sale?</Etiqueta>
+        <CampoEtiquetado etiqueta="De dónde sale">
           <SelectorCuenta cuentas={otras} valor={desde} alCambiar={setDesde} ninguna="De fuera" />
-        </>
+        </CampoEtiquetado>
       ) : null}
       {preguntaProcedencia ? (
         <SelectorOrigenAporte valor={procedencia} alCambiar={setProcedenciaElegida} />
       ) : null}
-      <View className="mt-4">
+      <CampoEtiquetado etiqueta="Nota">
         <CampoDescripcion valor={descripcion} alCambiar={setDescripcion} />
-      </View>
+      </CampoEtiquetado>
     </HojaMonto>
   );
 }
@@ -238,11 +231,12 @@ export function HojaRetiro({ saldo, saldos, alTerminar }: PropsHoja) {
       <Pressable
         onPress={() => setConGasto((actual) => !actual)}
         accessibilityRole="switch"
+        accessibilityLabel="Registrar el gasto"
         accessibilityState={{ checked: conGasto }}
-        className="flex-row items-center gap-3 rounded-lg bg-superficie px-4 py-3"
+        className="mb-5 min-h-12 flex-row items-center gap-3"
       >
         <View className="flex-1">
-          <Texto peso="semibold">Registrar el gasto</Texto>
+          <Texto peso="medium">Registrar el gasto</Texto>
           <Texto variante="detalle" tono="suave">
             {conGasto
               ? 'Queda anotado en qué se fue. Si lo vas a pagar con Apple Pay, apágalo: ese pago se registra solo.'
@@ -253,31 +247,33 @@ export function HojaRetiro({ saldo, saldos, alTerminar }: PropsHoja) {
           value={conGasto}
           onValueChange={setConGasto}
           trackColor={{ true: colores.primario, false: colores['superficie-alta'] }}
-          thumbColor="#FFFFFF"
+          thumbColor={colores.fondo}
+          ios_backgroundColor={colores['superficie-alta']}
         />
       </Pressable>
 
       {conGasto ? (
         <>
-          <Etiqueta>¿Para qué fue?</Etiqueta>
-          <SelectorCategoria
-            categorias={catalogo?.lista ?? []}
-            valor={categoria}
-            alCambiar={setCategoria}
-          />
-          <Etiqueta>Forma de pago</Etiqueta>
-          <SelectorMetodoPago valor={metodo} alCambiar={setMetodo} />
+          <CampoEtiquetado etiqueta="Para qué fue">
+            <SelectorCategoria
+              categorias={catalogo?.lista ?? []}
+              valor={categoria}
+              alCambiar={setCategoria}
+            />
+          </CampoEtiquetado>
+          <CampoEtiquetado etiqueta="Forma de pago">
+            <SelectorMetodoPago valor={metodo} alCambiar={setMetodo} />
+          </CampoEtiquetado>
         </>
       ) : otras.length > 0 ? (
-        <>
-          <Etiqueta>¿A dónde va?</Etiqueta>
+        <CampoEtiquetado etiqueta="A dónde va">
           <SelectorCuenta cuentas={otras} valor={hacia} alCambiar={setHacia} ninguna="Fuera" />
-        </>
+        </CampoEtiquetado>
       ) : null}
 
-      <View className="mb-2 mt-4">
+      <CampoEtiquetado etiqueta="Nota">
         <CampoDescripcion valor={descripcion} alCambiar={setDescripcion} />
-      </View>
+      </CampoEtiquetado>
     </HojaMonto>
   );
 }
@@ -415,23 +411,23 @@ export function HojaEditarMovimiento({
       }
     >
       {editaProcedencia ? (
-        <View className="mb-4">
-          <SelectorOrigenAporte valor={procedencia} alCambiar={setProcedencia} />
-        </View>
+        <SelectorOrigenAporte valor={procedencia} alCambiar={setProcedencia} />
       ) : null}
-      <View className="gap-3">
+      <CampoEtiquetado etiqueta="Día">
         <SelectorDia valor={fecha} alCambiar={setFecha} />
+      </CampoEtiquetado>
+      <CampoEtiquetado etiqueta="Nota">
         <CampoDescripcion valor={descripcion} alCambiar={setDescripcion} />
-        <Boton
-          texto="Eliminar"
-          icono="trash-outline"
-          variante="peligro"
-          tamano="sm"
-          ancho
-          cargando={eliminar.isPending}
-          onPress={alEliminar}
-        />
-      </View>
+      </CampoEtiquetado>
+      <Boton
+        texto="Eliminar movimiento"
+        icono="trash-outline"
+        variante="peligro"
+        tamano="sm"
+        ancho
+        cargando={eliminar.isPending}
+        onPress={alEliminar}
+      />
     </HojaMonto>
   );
 }

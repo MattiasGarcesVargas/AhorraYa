@@ -29,9 +29,9 @@ export function TecladoMonto({ alPulsar }: TecladoMontoProps) {
   };
 
   return (
-    <View className="gap-2">
+    <View className="gap-1">
       {FILAS.map((fila) => (
-        <View key={fila.join('')} className="flex-row gap-2">
+        <View key={fila.join('')} className="flex-row gap-1">
           {fila.map((tecla) => (
             <Pressable
               key={tecla}
@@ -41,12 +41,12 @@ export function TecladoMonto({ alPulsar }: TecladoMontoProps) {
               }
               onPress={() => pulsar(tecla)}
               onLongPress={tecla === 'borrar' ? () => pulsar('borrar') : undefined}
-              className="h-14 flex-1 items-center justify-center rounded-lg bg-superficie active:bg-superficie-alta"
+              className="h-12 flex-1 items-center justify-center rounded-lg active:bg-superficie"
             >
               {tecla === 'borrar' ? (
                 <Icono nombre="backspace-outline" tamano={24} />
               ) : (
-                <Texto variante="subtitulo" peso="semibold" numerico>
+                <Texto variante="subtitulo" peso="medium" numerico>
                   {tecla}
                 </Texto>
               )}

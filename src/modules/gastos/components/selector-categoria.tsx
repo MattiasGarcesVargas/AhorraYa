@@ -39,11 +39,11 @@ export function SelectorCategoria({ categorias, valor, alCambiar }: SelectorCate
             <Icono
               nombre={categoria.icono}
               tamano={22}
-              color={activa ? 'seleccion-icono' : 'texto'}
+              color={activa ? 'seleccion-icono' : 'texto-suave'}
             />
             <Texto
               variante="detalle"
-              peso="semibold"
+              peso={activa ? 'semibold' : 'medium'}
               tono={activa ? 'seleccion' : 'normal'}
               numberOfLines={1}
             >

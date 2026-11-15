@@ -43,7 +43,7 @@ export function ElegirCuentaEnlace({
         style={{ paddingBottom: Math.max(bottom, 16) }}
       >
         <View className="gap-1 px-5 pb-3">
-          <Texto variante="titulo" peso="bold">
+          <Texto variante="titulo" peso="semibold">
             ¿De qué cuenta sale?
           </Texto>
           <Texto tono="suave">

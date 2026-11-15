@@ -77,13 +77,13 @@ export function GuiaAtajo() {
       <Boton
         texto="Probar con un gasto de $ 1.00"
         icono="flash-outline"
-        variante="secundario"
+        variante="contorno"
         ancho
         onPress={probar}
       />
 
       <View className="gap-3">
-        <Texto peso="bold">¿Prefieres algo más simple?</Texto>
+        <Texto peso="semibold">¿Prefieres algo más simple?</Texto>
         <Texto variante="detalle" tono="suave">
           {
             'Un atajo con una sola acción "Abrir URL" y este enlace abre AhorraYa directo en la pantalla de nuevo gasto.'

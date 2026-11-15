@@ -4,7 +4,7 @@ import { useRouter } from 'expo-router';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { Encabezado } from '@/components/encabezado';
-import { Boton, Icono, Texto } from '@/components/ui';
+import { Boton, Icono, Separador, Texto } from '@/components/ui';
 import { MARGEN_PANTALLA } from '@/constants/layout.constants';
 import { formatMonedaEntera } from '@/lib/format';
 import { hapticos } from '@/lib/hapticos';
@@ -68,43 +68,47 @@ export default function EditarFrecuenciaScreen() {
     <View className="flex-1 bg-fondo">
       <Encabezado titulo="¿Cada cuánto cobras?" variante="hoja" />
       <ScrollView className="flex-1" contentContainerStyle={{ paddingHorizontal: MARGEN_PANTALLA }}>
-        <Texto variante="detalle" tono="suave">
+        <Texto variante="detalle" tono="suave" className="mt-2">
           Tus aportes al ahorro siguen a tus cobros: se te recuerda apartar cada vez que cobras.
         </Texto>
 
-        <View className="mt-4 gap-2" accessibilityRole="radiogroup">
-          {OPCIONES_FRECUENCIA.map((opcion) => {
+        <View className="mt-2" accessibilityRole="radiogroup">
+          {OPCIONES_FRECUENCIA.map((opcion, i) => {
             const activa = seleccion === opcion;
             return (
-              <Pressable
-                key={opcion}
-                accessibilityRole="radio"
-                accessibilityState={{ selected: activa }}
-                onPress={() => {
-                  hapticos.seleccion();
-                  setElegida(opcion);
-                }}
-                className="flex-row items-center gap-3 rounded-lg bg-superficie px-4 py-3 active:opacity-80"
-              >
-                <Icono
-                  nombre={activa ? 'radio-button-on' : 'radio-button-off'}
-                  tamano={22}
-                  color={activa ? 'primario' : 'texto-suave'}
-                />
-                <View className="flex-1">
-                  <Texto peso="semibold">{FRECUENCIAS[opcion].nombre}</Texto>
-                  <Texto variante="detalle" tono="suave">
-                    {FRECUENCIAS[opcion].detalle}
-                  </Texto>
-                </View>
-              </Pressable>
+              <View key={opcion}>
+                {i > 0 ? <Separador sangria={34} /> : null}
+                <Pressable
+                  accessibilityRole="radio"
+                  accessibilityState={{ selected: activa, checked: activa }}
+                  onPress={() => {
+                    hapticos.seleccion();
+                    setElegida(opcion);
+                  }}
+                  className="min-h-16 flex-row items-center gap-3 py-3 active:opacity-70"
+                >
+                  <Icono
+                    nombre={activa ? 'radio-button-on' : 'radio-button-off'}
+                    tamano={22}
+                    color={activa ? 'primario' : 'texto-suave'}
+                  />
+                  <View className="flex-1">
+                    <Texto peso={activa ? 'semibold' : 'medium'}>
+                      {FRECUENCIAS[opcion].nombre}
+                    </Texto>
+                    <Texto variante="detalle" tono="suave">
+                      {FRECUENCIAS[opcion].detalle}
+                    </Texto>
+                  </View>
+                </Pressable>
+              </View>
             );
           })}
         </View>
 
         {hayCambio ? (
           <View className="mt-5 gap-2">
-            <Texto variante="detalle" peso="bold">
+            <Texto variante="detalle" peso="semibold">
               Al cambiar a {FRECUENCIAS[seleccion].nombre.toLowerCase()}
             </Texto>
             {lineasDelCambio(actual, aplicarCambiosPlan(actual, cambios)).map((linea) => (
@@ -123,7 +127,7 @@ export default function EditarFrecuenciaScreen() {
       </ScrollView>
 
       <View
-        className="pt-3"
+        className="border-t border-borde pt-3"
         style={{ paddingHorizontal: MARGEN_PANTALLA, paddingBottom: Math.max(insets.bottom, 16) }}
       >
         <Boton

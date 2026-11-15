@@ -3,6 +3,7 @@ import { Pressable, ScrollView, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { CampoDescripcion } from '@/components/campo-descripcion';
+import { CampoEtiquetado } from '@/components/campo-etiquetado';
 import { Encabezado } from '@/components/encabezado';
 import { SelectorDia } from '@/components/selector-dia';
 import { TecladoMonto } from '@/components/teclado-monto';
@@ -122,7 +123,7 @@ export function FormularioGasto({
         showsVerticalScrollIndicator={false}
       >
         {aviso ? (
-          <View className="mt-2 rounded-lg bg-peligro-suave p-3">
+          <View className="mt-2 rounded-lg bg-peligro-suave p-4">
             <Texto variante="detalle" peso="semibold" tono="peligro" className="mb-1">
               El atajo no pudo registrar el gasto
             </Texto>
@@ -130,47 +131,50 @@ export function FormularioGasto({
           </View>
         ) : null}
         <VisorMonto entrada={entrada} />
-        {conImpuestos ? <DesgloseExterior consumoCentavos={centavos} className="-mt-2 mb-4" /> : null}
+        {conImpuestos ? (
+          <DesgloseExterior consumoCentavos={centavos} className="-mt-2 mb-4" />
+        ) : null}
 
-        <View className="mb-2 flex-row items-center justify-between">
-          <Texto variante="detalle" peso="semibold" tono="suave">
-            Categoría
-          </Texto>
-          <Pressable
-            accessibilityRole="button"
-            accessibilityLabel="Crear categoría"
-            hitSlop={10}
-            onPress={alCrearCategoria}
-            className="flex-row items-center gap-1 active:opacity-70"
-          >
-            <Icono nombre="add" tamano={16} color="primario" />
-            <Texto variante="detalle" peso="semibold" tono="primario">
-              Nueva
-            </Texto>
-          </Pressable>
-        </View>
-        <SelectorCategoria categorias={catalogo.lista} valor={categoria} alCambiar={setCategoria} />
+        <CampoEtiquetado
+          etiqueta="Categoría"
+          accion={
+            <Pressable
+              accessibilityRole="button"
+              accessibilityLabel="Crear categoría"
+              hitSlop={14}
+              onPress={alCrearCategoria}
+              className="flex-row items-center gap-1 active:opacity-70"
+            >
+              <Icono nombre="add" tamano={16} color="primario" />
+              <Texto variante="detalle" peso="medium" tono="primario">
+                Nueva
+              </Texto>
+            </Pressable>
+          }
+        >
+          <SelectorCategoria
+            categorias={catalogo.lista}
+            valor={categoria}
+            alCambiar={setCategoria}
+          />
+        </CampoEtiquetado>
 
-        <Texto variante="detalle" peso="semibold" tono="suave" className="mb-2 mt-5">
-          Forma de pago
-        </Texto>
-        <SelectorMetodoPago valor={metodo} alCambiar={setMetodo} />
+        <CampoEtiquetado etiqueta="Forma de pago">
+          <SelectorMetodoPago valor={metodo} alCambiar={setMetodo} />
+        </CampoEtiquetado>
 
         {eligeCuenta ? (
-          <>
-            <Texto variante="detalle" peso="semibold" tono="suave" className="mb-2 mt-5">
-              Sale de
-            </Texto>
+          <CampoEtiquetado etiqueta="Sale de">
             <SelectorCuenta
               cuentas={cuentas}
               valor={cuenta}
               alCambiar={setCuenta}
               ninguna="Ninguna"
             />
-          </>
+          </CampoEtiquetado>
         ) : null}
 
-        <View className="mt-5 gap-3">
+        <CampoEtiquetado etiqueta="Día">
           {editando || (fecha !== hoy && fecha !== ayer) ? (
             <SelectorDia valor={fecha} alCambiar={setFecha} />
           ) : (
@@ -179,13 +183,16 @@ export function FormularioGasto({
               <Chip texto="Ayer" seleccionado={fecha === ayer} onPress={() => setFecha(ayer)} />
             </View>
           )}
+        </CampoEtiquetado>
+
+        <CampoEtiquetado etiqueta="Nota">
           <CampoDescripcion
             valor={descripcion}
             alCambiar={setDescripcion}
-            marcador="Descripción: qué fue (opcional)"
+            marcador="Qué fue (opcional)"
             largoMaximo={LARGO_MAXIMO_NOTA}
           />
-        </View>
+        </CampoEtiquetado>
 
         {alEliminar ? (
           <Boton
@@ -194,7 +201,6 @@ export function FormularioGasto({
             variante="peligro"
             tamano="sm"
             ancho
-            className="mt-5"
             onPress={alEliminar}
           />
         ) : null}

@@ -2,9 +2,10 @@ import { useState } from 'react';
 import { View } from 'react-native';
 
 import { CampoDescripcion } from '@/components/campo-descripcion';
+import { CampoEtiquetado } from '@/components/campo-etiquetado';
 import { HojaMonto } from '@/components/hoja-monto';
 import { SelectorDia } from '@/components/selector-dia';
-import { BotonIcono, Chip, Texto } from '@/components/ui';
+import { BotonIcono, Chip } from '@/components/ui';
 import { hoyIso } from '@/lib/fechas';
 import { formatMoneda } from '@/lib/format';
 import { hapticos } from '@/lib/hapticos';
@@ -21,14 +22,6 @@ export interface HojaTransferirProps {
   /** La cuenta desde la que se abrió la hoja: es el "Desde" propuesto. */
   desdeInicialId: number;
   alTerminar: () => void;
-}
-
-function Etiqueta({ children }: { children: string }) {
-  return (
-    <Texto variante="detalle" peso="semibold" tono="suave" className="mb-2 mt-5">
-      {children}
-    </Texto>
-  );
 }
 
 /** Mover plata entre dos cuentas propias: una sale, la otra recibe. */
@@ -99,30 +92,26 @@ export function HojaTransferir({ saldos, desdeInicialId, alTerminar }: HojaTrans
         );
       }}
     >
-      <Etiqueta>Desde</Etiqueta>
-      <SelectorCuenta cuentas={cuentas} valor={desdeId} alCambiar={elegirDesde} />
-      <Texto variante="detalle" tono="suave" className="mt-2">
-        {`Disponible: ${formatMoneda(desde.saldo)}`}
-      </Texto>
+      <CampoEtiquetado etiqueta="Desde" ayuda={`Disponible: ${formatMoneda(desde.saldo)}`}>
+        <SelectorCuenta cuentas={cuentas} valor={desdeId} alCambiar={elegirDesde} />
+      </CampoEtiquetado>
 
-      <View className="mt-3 items-center">
+      <View className="-mt-2 mb-3 items-center">
         <BotonIcono
           icono="swap-vertical"
           etiqueta={`Invertir: de ${hacia.cuenta.nombre} a ${desde.cuenta.nombre}`}
+          variante="fantasma"
           onPress={intercambiar}
         />
       </View>
 
-      <Etiqueta>Hacia</Etiqueta>
-      <SelectorCuenta cuentas={cuentas} valor={haciaId} alCambiar={elegirHacia} />
-      <Texto variante="detalle" tono="suave" className="mt-2">
-        {`Tiene: ${formatMoneda(hacia.saldo)}`}
-      </Texto>
+      <CampoEtiquetado etiqueta="Hacia" ayuda={`Tiene: ${formatMoneda(hacia.saldo)}`}>
+        <SelectorCuenta cuentas={cuentas} valor={haciaId} alCambiar={elegirHacia} />
+      </CampoEtiquetado>
 
       {entraAlAhorro ? (
-        <>
-          <Etiqueta>¿De dónde viene?</Etiqueta>
-          <View className="flex-row gap-2">
+        <CampoEtiquetado etiqueta="De dónde viene">
+          <View className="flex-row gap-2" accessibilityRole="radiogroup">
             <Chip
               texto="De mi sueldo"
               seleccionado={origen === 'sueldo'}
@@ -134,17 +123,19 @@ export function HojaTransferir({ saldos, desdeInicialId, alTerminar }: HojaTrans
               onPress={() => setOrigen('extra')}
             />
           </View>
-        </>
+        </CampoEtiquetado>
       ) : null}
 
-      <View className="mb-2 mt-5 gap-3">
+      <CampoEtiquetado etiqueta="Día">
         <SelectorDia valor={fecha} alCambiar={setFecha} />
+      </CampoEtiquetado>
+      <CampoEtiquetado etiqueta="Nota">
         <CampoDescripcion
           valor={descripcion}
           alCambiar={setDescripcion}
           marcador="Motivo (opcional)"
         />
-      </View>
+      </CampoEtiquetado>
     </HojaMonto>
   );
 }

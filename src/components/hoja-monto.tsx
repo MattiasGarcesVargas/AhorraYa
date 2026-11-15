@@ -62,11 +62,11 @@ export function HojaMonto({
       <Encabezado titulo={titulo} variante="hoja" />
       <ScrollView
         className="flex-1"
-        contentContainerStyle={{ paddingHorizontal: MARGEN_PANTALLA }}
+        contentContainerStyle={{ paddingHorizontal: MARGEN_PANTALLA, paddingBottom: 8 }}
         keyboardShouldPersistTaps="handled"
       >
         {descripcion ? (
-          <Texto variante="detalle" tono="suave">
+          <Texto variante="detalle" tono="suave" className="text-center">
             {descripcion}
           </Texto>
         ) : null}
@@ -75,7 +75,7 @@ export function HojaMonto({
           <Texto
             variante="detalle"
             tono="peligro"
-            className="mb-3 text-center"
+            className="mb-4 text-center"
             numerico
             accessibilityLiveRegion="polite"
           >
@@ -86,7 +86,7 @@ export function HojaMonto({
       </ScrollView>
 
       <View
-        className="gap-3 pt-3"
+        className="gap-3 border-t border-borde pt-3"
         style={{ paddingHorizontal: MARGEN_PANTALLA, paddingBottom: Math.max(insets.bottom, 16) }}
       >
         <TecladoMonto alPulsar={(tecla) => setEntrada((actual) => pulsarTecla(actual, tecla))} />

@@ -4,7 +4,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { AvatarCategoria } from '@/components/avatar-categoria';
 import { Encabezado } from '@/components/encabezado';
-import { Boton, Icono, Separador, Superficie, Texto } from '@/components/ui';
+import { Boton, Icono, Separador, Texto } from '@/components/ui';
 import { MARGEN_PANTALLA } from '@/constants/layout.constants';
 import { formatMoneda, formatMonedaEntera } from '@/lib/format';
 import { useCategorias } from '@/modules/categorias/hooks/use-categorias';
@@ -29,15 +29,15 @@ export default function CategoriasScreen() {
           paddingBottom: insets.bottom + 32,
         }}
       >
-        <Texto tono="suave" className="mb-5 mt-2">
+        <Texto tono="suave" className="mb-4 mt-2">
           En qué se te va el dinero y cuánto te permites gastar al mes en cada cosa. En la vista por
           quincena se usa la mitad.
         </Texto>
 
-        <Superficie relleno="ninguno" className="overflow-hidden">
+        <View>
           {categorias.map((categoria, i) => (
             <View key={categoria.id}>
-              {i > 0 ? <Separador sangria={64} /> : null}
+              {i > 0 ? <Separador sangria={52} /> : null}
               <Pressable
                 accessibilityRole="button"
                 accessibilityLabel={`${categoria.nombre}, ${
@@ -46,7 +46,7 @@ export default function CategoriasScreen() {
                     : 'sin tope'
                 }. Editar.`}
                 onPress={() => editar(categoria.id)}
-                className="flex-row items-center gap-3 px-4 py-3 active:bg-superficie-alta"
+                className="min-h-14 flex-row items-center gap-3 py-2 active:opacity-70"
               >
                 <AvatarCategoria icono={categoria.icono} color={categoria.color} tamano={36} />
                 <View className="flex-1">
@@ -59,31 +59,29 @@ export default function CategoriasScreen() {
                       : 'Sin tope'}
                   </Texto>
                 </View>
-                <Texto peso="bold" numerico>
-                  {formatMonedaEntera(categoria.limiteMensualCentavos)}
-                </Texto>
+                <Texto numerico>{formatMonedaEntera(categoria.limiteMensualCentavos)}</Texto>
                 <Icono nombre="chevron-forward" tamano={16} color="texto-suave" />
               </Pressable>
             </View>
           ))}
-        </Superficie>
+        </View>
 
         <Boton
           texto="Nueva categoría"
           icono="add"
-          variante="secundario"
+          variante="contorno"
           ancho
-          className="mt-3"
+          className="mt-4"
           onPress={() => editar()}
         />
 
-        <View className="mt-6 flex-row items-baseline justify-between px-1">
-          <Texto peso="bold">Total al mes</Texto>
-          <Texto variante="subtitulo" numerico>
+        <View className="mt-6 flex-row items-baseline justify-between">
+          <Texto peso="semibold">Total al mes</Texto>
+          <Texto variante="subtitulo" peso="semibold" numerico>
             {formatMonedaEntera(total)}
           </Texto>
         </View>
-        <Texto variante="detalle" tono="suave" className="mt-1 px-1 text-right" numerico>
+        <Texto variante="detalle" tono="suave" className="mt-1 text-right" numerico>
           {formatMoneda(limiteEnPeriodo(total, 'quincena'))} por quincena
         </Texto>
       </ScrollView>

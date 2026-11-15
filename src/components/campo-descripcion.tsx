@@ -14,7 +14,7 @@ export interface CampoDescripcionProps {
 export function CampoDescripcion({
   valor,
   alCambiar,
-  marcador = 'Descripción (opcional)',
+  marcador = 'Opcional',
   largoMaximo = 120,
 }: CampoDescripcionProps) {
   const { colores } = useTema();
@@ -27,7 +27,7 @@ export function CampoDescripcion({
       maxLength={largoMaximo}
       returnKeyType="done"
       accessibilityLabel="Descripción"
-      className="h-11 rounded-full bg-superficie px-4 text-sm text-texto"
+      className="h-12 rounded-lg border border-borde px-4 text-base text-texto"
       style={{ fontFamily: FUENTES.medium }}
     />
   );

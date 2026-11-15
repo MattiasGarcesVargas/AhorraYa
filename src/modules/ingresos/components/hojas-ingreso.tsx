@@ -2,9 +2,10 @@ import { useState } from 'react';
 import { View } from 'react-native';
 
 import { CampoDescripcion } from '@/components/campo-descripcion';
+import { CampoEtiquetado } from '@/components/campo-etiquetado';
 import { HojaMonto } from '@/components/hoja-monto';
 import { SelectorDia } from '@/components/selector-dia';
-import { Boton, Chip, Texto } from '@/components/ui';
+import { Boton, Chip } from '@/components/ui';
 import { confirmar } from '@/lib/confirmar';
 import { hoyIso } from '@/lib/fechas';
 import { formatMoneda } from '@/lib/format';
@@ -22,14 +23,6 @@ import {
 import { TIPOS_INGRESO, type Ingreso, type TipoIngreso } from '../ingresos.types';
 import { repartir, type Reparto } from '../utils/reparto';
 
-function Etiqueta({ children }: { children: string }) {
-  return (
-    <Texto variante="detalle" peso="semibold" tono="suave" className="mb-2 mt-5">
-      {children}
-    </Texto>
-  );
-}
-
 function SelectorTipo({
   valor,
   alCambiar,
@@ -38,7 +31,7 @@ function SelectorTipo({
   alCambiar: (tipo: TipoIngreso) => void;
 }) {
   return (
-    <View className="flex-row justify-center gap-2" accessibilityRole="radiogroup">
+    <View className="flex-row flex-wrap gap-2" accessibilityRole="radiogroup">
       {TIPOS_INGRESO.map((opcion) => (
         <Chip
           key={opcion.id}
@@ -132,23 +125,30 @@ export function HojaNuevoIngreso({ cuentas, plan, alTerminar }: HojaNuevoIngreso
         const { alAhorro, paraGastar } = repartir(centavos, repartoEfectivo, aportePlan);
         return (
           <View>
-            <SelectorTipo valor={tipo} alCambiar={elegirTipo} />
+            <CampoEtiquetado etiqueta="Tipo">
+              <SelectorTipo valor={tipo} alCambiar={elegirTipo} />
+            </CampoEtiquetado>
 
             {diarias.length > 0 ? (
-              <>
-                <Etiqueta>¿A dónde llega?</Etiqueta>
+              <CampoEtiquetado etiqueta="Llega a">
                 <SelectorCuenta
                   cuentas={diarias}
                   valor={llegaA}
                   alCambiar={setLlegaA}
                   ninguna="Efectivo"
                 />
-              </>
+              </CampoEtiquetado>
             ) : null}
 
             {cuentaAhorro ? (
-              <>
-                <Etiqueta>Págate primero</Etiqueta>
+              <CampoEtiquetado
+                etiqueta="Págate primero"
+                ayuda={
+                  alAhorro > 0
+                    ? `Van ${formatMoneda(alAhorro)} a ${cuentaAhorro.nombre} y te quedan ${formatMoneda(paraGastar)} para gastar hasta el siguiente pago.`
+                    : `Te quedan los ${formatMoneda(paraGastar)} completos para gastar. Nada va al ahorro.`
+                }
+              >
                 <View className="flex-row flex-wrap gap-2" accessibilityRole="radiogroup">
                   <Chip
                     texto="No apartar"
@@ -168,19 +168,12 @@ export function HojaNuevoIngreso({ cuentas, plan, alTerminar }: HojaNuevoIngreso
                     onPress={() => setReparto('todo')}
                   />
                 </View>
-                <View className="mt-3 rounded-lg bg-superficie px-4 py-3">
-                  <Texto variante="detalle" numerico>
-                    {alAhorro > 0
-                      ? `Van ${formatMoneda(alAhorro)} a ${cuentaAhorro.nombre} y te quedan ${formatMoneda(paraGastar)} para gastar hasta el siguiente pago.`
-                      : `Te quedan los ${formatMoneda(paraGastar)} completos para gastar. Nada va al ahorro.`}
-                  </Texto>
-                </View>
-              </>
+              </CampoEtiquetado>
             ) : null}
 
-            <View className="mb-2 mt-4">
+            <CampoEtiquetado etiqueta="Nota">
               <CampoDescripcion valor={descripcion} alCambiar={setDescripcion} />
-            </View>
+            </CampoEtiquetado>
           </View>
         );
       }}
@@ -239,31 +232,34 @@ export function HojaEditarIngreso({ ingreso, cuentas, alTerminar }: HojaEditarIn
         )
       }
     >
-      <SelectorTipo valor={tipo} alCambiar={setTipo} />
+      <CampoEtiquetado etiqueta="Tipo">
+        <SelectorTipo valor={tipo} alCambiar={setTipo} />
+      </CampoEtiquetado>
       {diarias.length > 0 ? (
-        <>
-          <Etiqueta>¿A dónde llegó?</Etiqueta>
+        <CampoEtiquetado etiqueta="Llegó a">
           <SelectorCuenta
             cuentas={diarias}
             valor={llegaA}
             alCambiar={setLlegaA}
             ninguna="Efectivo"
           />
-        </>
+        </CampoEtiquetado>
       ) : null}
-      <View className="mb-2 mt-4 gap-3">
+      <CampoEtiquetado etiqueta="Día">
         <SelectorDia valor={fecha} alCambiar={setFecha} />
+      </CampoEtiquetado>
+      <CampoEtiquetado etiqueta="Nota">
         <CampoDescripcion valor={descripcion} alCambiar={setDescripcion} />
-        <Boton
-          texto="Eliminar"
-          icono="trash-outline"
-          variante="peligro"
-          tamano="sm"
-          ancho
-          cargando={eliminar.isPending}
-          onPress={alEliminar}
-        />
-      </View>
+      </CampoEtiquetado>
+      <Boton
+        texto="Eliminar ingreso"
+        icono="trash-outline"
+        variante="peligro"
+        tamano="sm"
+        ancho
+        cargando={eliminar.isPending}
+        onPress={alEliminar}
+      />
     </HojaMonto>
   );
 }
