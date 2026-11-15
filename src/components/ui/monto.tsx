@@ -41,13 +41,13 @@ export function Monto({ centavos, tamano = 'xl', tono = 'normal', restoSuave = t
       accessible
       accessibilityLabel={formatMoneda(centavos)}
     >
-      <Texto variante={t.resto} peso="bold" tono={tonoResto} numerico className="mr-1">
+      <Texto variante={t.resto} peso="semibold" tono={tonoResto} numerico className="mr-1">
         {signo}$
       </Texto>
       <Texto variante={t.entero} tono={tono} numerico>
         {entero}
       </Texto>
-      <Texto variante={t.resto} peso="bold" tono={tonoResto} numerico>
+      <Texto variante={t.resto} peso="semibold" tono={tonoResto} numerico>
         .{decimales}
       </Texto>
     </View>

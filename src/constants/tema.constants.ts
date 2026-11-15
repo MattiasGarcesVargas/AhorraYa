@@ -5,85 +5,87 @@ export type Paleta = Record<NombreToken, string>;
 export type ModoTema = 'claro' | 'oscuro';
 
 /**
- * Verdes, negro y blanco. Los neutros llevan una gota de verde (#F4F7F5 y no
- * #F5F5F5): un gris puro junto a un verde se ve sucio, uno teñido se ve de la
- * misma familia.
+ * Papel y tinta verde: la app se lee como una libreta de cuentas, no como un
+ * panel de control. Fondo de papel cálido (nunca blanco puro ni negro puro),
+ * un solo verde profundo —el del logo— y tonos de tierra para lo demás.
  *
  * El color SIGNIFICA algo, no decora:
- * - `primario`: la acción principal de cada pantalla.
- * - `tinta` + `menta`: la tarjeta protagonista (lo disponible, el ahorro).
- * - `seleccion`: la opción elegida (chips, categorías). Negro en claro,
- *   casi blanco en oscuro: siempre el máximo contraste con el fondo.
- * - `peligro`: único color fuera de la gama, sólo para "te pasaste".
- * - `cat-*`: una escala de verdes por categoría. Nunca va sola: siempre con
- *   su nombre al lado, porque seis verdes no se distinguen sólo por el tono.
+ * - `primario`: LA acción principal de cada pantalla. Una sola por pantalla;
+ *   todo lo demás va en contorno o en texto.
+ * - `tinta` + `menta`: la tarjeta protagonista (lo disponible, el total).
+ * - `seleccion`: la opción elegida (chips, categorías): máximo contraste.
+ * - `acento`: avisos tranquilos y llamados secundarios.
+ * - `peligro`: terracota, sólo para "te pasaste" y para eliminar.
+ * - `cat-*`: tonos de tierra distintos entre sí (verde, ocre, terracota,
+ *   petróleo, ciruela…), apagados para no competir con `primario`. Siempre
+ *   van con su nombre al lado.
  */
 const CLARA: Paleta = {
-  fondo: '#FFFFFF',
-  superficie: '#F4F7F5',
-  'superficie-alta': '#E8EFEA',
-  borde: '#E1E8E3',
-  texto: '#0A0F0C',
-  'texto-suave': '#56665D',
-  primario: '#15803D',
-  'primario-texto': '#FFFFFF',
-  acento: '#E2F5E8',
-  'acento-texto': '#14532D',
-  tinta: '#0A0F0C',
-  'tinta-texto': '#FFFFFF',
-  'tinta-suave': '#A3B3AA',
-  'tinta-borde': '#223029',
-  menta: '#4ADE80',
+  fondo: '#FAF8F3',
+  superficie: '#F1EEE6',
+  'superficie-alta': '#E6E2D7',
+  borde: '#DCD7CA',
+  texto: '#1A1F1B',
+  'texto-suave': '#676B62',
+  primario: '#0B4F2F',
+  'primario-texto': '#FAF8F3',
+  acento: '#E2EADB',
+  'acento-texto': '#0B4F2F',
+  tinta: '#12251B',
+  'tinta-texto': '#F6F3EA',
+  'tinta-suave': '#A9B8AC',
+  'tinta-borde': '#28402F',
+  menta: '#BBD9A3',
   // El verde del logo (assets/images/logo.png se tiñe con él).
   marca: '#034019',
-  seleccion: '#0A0F0C',
-  'seleccion-texto': '#FFFFFF',
-  'seleccion-icono': '#4ADE80',
-  peligro: '#DC2626',
-  'peligro-suave': '#FDECEC',
-  'cat-1': '#14532D',
-  'cat-2': '#15803D',
-  'cat-3': '#22C55E',
-  'cat-4': '#4ADE80',
-  'cat-5': '#86EFAC',
-  'cat-6': '#0A0F0C',
-  // Verde oliva y lima: siguen en la familia, pero se distinguen de los seis primeros.
-  'cat-7': '#3F6212',
-  'cat-8': '#A3E635',
+  seleccion: '#1A1F1B',
+  'seleccion-texto': '#FAF8F3',
+  'seleccion-icono': '#BBD9A3',
+  peligro: '#A93B26',
+  'peligro-suave': '#F5E2DB',
+  'cat-1': '#2F6B4A',
+  'cat-2': '#A9762A',
+  'cat-3': '#A9513A',
+  'cat-4': '#2F6170',
+  'cat-5': '#7A4B66',
+  'cat-6': '#3B403C',
+  'cat-7': '#657030',
+  'cat-8': '#8A7458',
 };
 
 const OSCURA: Paleta = {
-  fondo: '#060907',
-  superficie: '#0F1511',
-  'superficie-alta': '#17201A',
-  borde: '#1E2922',
-  texto: '#EEF4F0',
-  'texto-suave': '#91A399',
-  primario: '#22C55E',
-  'primario-texto': '#03140A',
-  acento: '#0F2619',
-  'acento-texto': '#86EFAC',
-  tinta: '#0C1A12',
-  'tinta-texto': '#FFFFFF',
-  'tinta-suave': '#9FB7A9',
-  'tinta-borde': '#1F382A',
-  menta: '#4ADE80',
-  // En oscuro el logo pasa a menta: el verde de la marca se pierde sobre negro.
-  marca: '#4ADE80',
+  fondo: '#111411',
+  superficie: '#191D19',
+  'superficie-alta': '#232823',
+  borde: '#2D332D',
+  texto: '#ECE9E0',
+  'texto-suave': '#9A9E94',
+  // En oscuro el verde se aclara y se apaga: un verde neón sobre negro grita.
+  primario: '#A3CE8C',
+  'primario-texto': '#10200F',
+  acento: '#1B2A20',
+  'acento-texto': '#B7DBA4',
+  tinta: '#16261C',
+  'tinta-texto': '#F3F0E7',
+  'tinta-suave': '#9DAE9F',
+  'tinta-borde': '#2A3D30',
+  menta: '#B7DBA4',
+  // En oscuro el logo pasa al verde claro: el de la marca se pierde sobre negro.
+  marca: '#B7DBA4',
   // En oscuro la selección se INVIERTE: un negro sobre casi negro no se ve.
-  seleccion: '#EEF4F0',
-  'seleccion-texto': '#0A0F0C',
-  'seleccion-icono': '#15803D',
-  peligro: '#F87171',
-  'peligro-suave': '#2A1414',
-  'cat-1': '#BBF7D0',
-  'cat-2': '#86EFAC',
-  'cat-3': '#4ADE80',
-  'cat-4': '#22C55E',
-  'cat-5': '#15803D',
-  'cat-6': '#E5ECE8',
-  'cat-7': '#D9F99D',
-  'cat-8': '#65A30D',
+  seleccion: '#ECE9E0',
+  'seleccion-texto': '#151815',
+  'seleccion-icono': '#2F6B4A',
+  peligro: '#E38B73',
+  'peligro-suave': '#2E1B16',
+  'cat-1': '#7FB894',
+  'cat-2': '#D9B26A',
+  'cat-3': '#D98E76',
+  'cat-4': '#7FB0BF',
+  'cat-5': '#B88AA6',
+  'cat-6': '#C9CCC4',
+  'cat-7': '#AEB86A',
+  'cat-8': '#C2AE92',
 };
 
 export const PALETAS: Record<ModoTema, Paleta> = { claro: CLARA, oscuro: OSCURA };

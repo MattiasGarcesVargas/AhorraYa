@@ -19,13 +19,18 @@ export interface SeccionProps {
 export function Seccion({ titulo, accion, children, className }: SeccionProps) {
   return (
     <View className={seccion({ className })}>
-      <View className="mb-3 flex-row items-center justify-between">
-        <Texto variante="cuerpo" peso="bold" accessibilityRole="header">
+      <View className="mb-2 min-h-8 flex-row items-center justify-between">
+        <Texto variante="cuerpo" peso="semibold" accessibilityRole="header">
           {titulo}
         </Texto>
         {accion ? (
-          <Pressable accessibilityRole="button" hitSlop={10} onPress={accion.alPulsar}>
-            <Texto variante="detalle" peso="semibold" tono="primario">
+          <Pressable
+            accessibilityRole="button"
+            hitSlop={{ top: 14, bottom: 14, left: 14, right: 14 }}
+            className="min-h-11 justify-center"
+            onPress={accion.alPulsar}
+          >
+            <Texto variante="detalle" peso="medium" tono="primario">
               {accion.texto}
             </Texto>
           </Pressable>

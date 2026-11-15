@@ -3,7 +3,7 @@ import { useRouter } from 'expo-router';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { Encabezado } from '@/components/encabezado';
-import { Boton, Separador, Superficie, Texto } from '@/components/ui';
+import { Boton, Separador, Texto } from '@/components/ui';
 import { MARGEN_PANTALLA } from '@/constants/layout.constants';
 import { sumar } from '@/lib/dinero';
 import { hoyIso } from '@/lib/fechas';
@@ -44,23 +44,23 @@ export default function SuscripcionesScreen() {
           paddingBottom: insets.bottom + 32,
         }}
       >
-        <Texto tono="suave" className="mb-5 mt-2">
+        <Texto tono="suave" className="mb-4 mt-2">
           Cobros que se repiten un día fijo del mes. Ese día se registran solos como gasto al abrir
           la app.
         </Texto>
 
         {suscripciones.length === 0 ? (
-          <Superficie className="items-center py-8">
+          <View className="items-center py-8">
             <Texto peso="semibold">Aún no tienes suscripciones</Texto>
             <Texto variante="detalle" tono="suave" className="mt-1 text-center">
               Agrega Claude, el almacenamiento de Apple o lo que se cobre cada mes.
             </Texto>
-          </Superficie>
+          </View>
         ) : (
-          <Superficie relleno="ninguno" className="overflow-hidden">
+          <View>
             {suscripciones.map((s, i) => (
               <View key={s.id}>
-                {i > 0 ? <Separador sangria={64} /> : null}
+                {i > 0 ? <Separador sangria={52} /> : null}
                 <FilaSuscripcion
                   suscripcion={s}
                   categoria={catalogo.porId(s.categoria)}
@@ -70,22 +70,22 @@ export default function SuscripcionesScreen() {
                 />
               </View>
             ))}
-          </Superficie>
+          </View>
         )}
 
         <Boton
           texto="Nueva suscripción"
           icono="add"
-          variante="secundario"
+          variante="contorno"
           ancho
-          className="mt-3"
+          className="mt-4"
           onPress={() => editar()}
         />
 
         {suscripciones.length > 0 ? (
-          <View className="mt-6 flex-row items-baseline justify-between px-1">
-            <Texto peso="bold">Total al mes</Texto>
-            <Texto variante="subtitulo" numerico>
+          <View className="mt-6 flex-row items-baseline justify-between">
+            <Texto peso="semibold">Total al mes</Texto>
+            <Texto variante="subtitulo" peso="semibold" numerico>
               {formatMoneda(total)}
             </Texto>
           </View>

@@ -80,13 +80,12 @@ export default function CuentaScreen() {
           </View>
         </Superficie>
 
-        <View className="mt-3 flex-row gap-3">
+        <View className="mt-4 flex-row gap-2">
           {saldos.length > 1 ? (
             <Boton
               texto="Transferir"
               icono="swap-horizontal"
-              variante="secundario"
-              tamano="sm"
+              variante="contorno"
               className="flex-1"
               onPress={() => ir('transferir')}
             />
@@ -94,16 +93,14 @@ export default function CuentaScreen() {
           <Boton
             texto="Cuadrar"
             icono="checkmark-done-outline"
-            variante="secundario"
-            tamano="sm"
+            variante="contorno"
             className="flex-1"
             onPress={() => ir('cuadrar')}
           />
           <Boton
-            texto="Editar cuenta"
+            texto="Editar"
             icono="create-outline"
-            variante="secundario"
-            tamano="sm"
+            variante="contorno"
             className="flex-1"
             onPress={() =>
               router.push({ pathname: '/editar-cuenta', params: { id: String(cuenta.id) } })

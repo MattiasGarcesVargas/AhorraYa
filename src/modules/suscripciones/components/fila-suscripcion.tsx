@@ -34,7 +34,7 @@ export function FilaSuscripcion({
       accessibilityRole="button"
       accessibilityLabel={`${suscripcion.nombre}, ${formatMoneda(suscripcion.montoCentavos)} al mes, ${detalle}. Editar.`}
       onPress={alPulsar}
-      className={`flex-row items-center gap-3 px-4 py-3 active:bg-superficie-alta ${
+      className={`min-h-14 flex-row items-center gap-3 py-2 active:opacity-70 ${
         suscripcion.activa ? '' : 'opacity-50'
       }`}
     >
@@ -48,9 +48,7 @@ export function FilaSuscripcion({
         </Texto>
       </View>
       <View className="items-end">
-        <Texto peso="bold" numerico>
-          {formatMoneda(suscripcion.montoCentavos)}
-        </Texto>
+        <Texto numerico>{formatMoneda(suscripcion.montoCentavos)}</Texto>
         {cobradoCentavos !== null ? (
           <Texto variante="detalle" tono="suave" numerico>
             Cobran {formatMoneda(cobradoCentavos)}

@@ -1,6 +1,6 @@
 import { Pressable, View } from 'react-native';
 
-import { Separador, Superficie, Texto } from '@/components/ui';
+import { Separador, Texto } from '@/components/ui';
 import { formatDiaMes } from '@/lib/fechas';
 import { formatMoneda, formatMonedaConSigno } from '@/lib/format';
 
@@ -18,7 +18,7 @@ function Total({ etiqueta, valor }: { etiqueta: string; valor: string }) {
       <Texto variante="mini" tono="suave">
         {etiqueta}
       </Texto>
-      <Texto variante="detalle" peso="bold" numerico>
+      <Texto variante="detalle" peso="semibold" numerico>
         {valor}
       </Texto>
     </View>
@@ -35,13 +35,13 @@ function Linea({ linea, alAbrir }: { linea: LineaLibro; alAbrir: LibroCuentaProp
       accessibilityHint={origen ? 'Toca para editar' : undefined}
       disabled={!origen}
       onPress={origen ? () => alAbrir(origen) : undefined}
-      className="flex-row items-center gap-3 px-4 py-2.5 active:bg-superficie-alta"
+      className="min-h-12 flex-row items-center gap-3 py-2.5 active:bg-superficie-alta"
     >
       <Texto variante="mini" tono="suave" numerico className="w-11">
         {formatDiaMes(linea.fecha)}
       </Texto>
       <View className="flex-1">
-        <Texto variante="detalle" peso="semibold" numberOfLines={1}>
+        <Texto variante="detalle" numberOfLines={1}>
           {linea.concepto}
         </Texto>
         {linea.detalle ? (
@@ -51,7 +51,7 @@ function Linea({ linea, alAbrir }: { linea: LineaLibro; alAbrir: LibroCuentaProp
         ) : null}
       </View>
       <View className="items-end">
-        <Texto variante="detalle" peso="bold" numerico tono={importe > 0 ? 'primario' : 'normal'}>
+        <Texto variante="detalle" peso="medium" numerico tono={importe > 0 ? 'primario' : 'normal'}>
           {formatMonedaConSigno(importe)}
         </Texto>
         <Texto variante="mini" tono="suave" numerico>
@@ -68,37 +68,38 @@ function Linea({ linea, alAbrir }: { linea: LineaLibro; alAbrir: LibroCuentaProp
  */
 export function LibroCuenta({ libro, alAbrir }: LibroCuentaProps) {
   return (
-    <View className="gap-3">
-      <Superficie className="flex-row gap-3">
+    <View className="gap-4">
+      <View className="flex-row gap-3">
         <Total etiqueta="Entró" valor={formatMonedaConSigno(libro.totalEntra)} />
         <Total etiqueta="Salió" valor={formatMonedaConSigno(-libro.totalSale)} />
         <Total etiqueta="Saldo al cierre" valor={formatMoneda(libro.saldoAlCierre)} />
-      </Superficie>
+      </View>
+      <Separador />
 
-      <Superficie relleno="ninguno" className="overflow-hidden py-1">
-        <View className="flex-row items-center justify-between px-4 py-2.5">
+      <View>
+        <View className="min-h-11 flex-row items-center justify-between py-2.5">
           <Texto variante="detalle" tono="suave">
             Saldo al inicio
           </Texto>
-          <Texto variante="detalle" peso="bold" tono="suave" numerico>
+          <Texto variante="detalle" tono="suave" numerico>
             {formatMoneda(libro.saldoAlInicio)}
           </Texto>
         </View>
         {libro.lineas.map((linea) => (
           <View key={linea.clave}>
-            <Separador sangria={16} />
+            <Separador />
             <Linea linea={linea} alAbrir={alAbrir} />
           </View>
         ))}
         {libro.lineas.length === 0 ? (
           <>
-            <Separador sangria={16} />
-            <Texto variante="detalle" tono="suave" className="px-4 py-3">
+            <Separador />
+            <Texto variante="detalle" tono="suave" className="py-3">
               Sin movimientos en este mes.
             </Texto>
           </>
         ) : null}
-      </Superficie>
+      </View>
     </View>
   );
 }

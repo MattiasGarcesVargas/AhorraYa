@@ -1,7 +1,7 @@
 import { Pressable, View } from 'react-native';
 import { useRouter } from 'expo-router';
 
-import { Boton, Icono, Superficie, Texto } from '@/components/ui';
+import { Boton, Icono, Separador, Texto } from '@/components/ui';
 import type { Centavos } from '@/lib/dinero';
 import { formatMoneda } from '@/lib/format';
 import { hapticos } from '@/lib/hapticos';
@@ -38,50 +38,53 @@ export function PagatePrimero({ ahorro, extra = 0, tipoPeriodo = 'quincena' }: P
 
   if (ahorro.cumplido) {
     return (
-      <Superficie variante="acento" className="flex-row items-center gap-3">
-        <Icono nombre="checkmark-circle" tamano={22} color="acento-texto" />
+      <View className="flex-row items-center gap-3 py-1">
+        <Icono nombre="checkmark-circle" tamano={22} color="primario" />
         <View className="flex-1">
-          <Texto peso="bold" tono="acento">
-            Ya te pagaste primero
-          </Texto>
-          <Texto variante="detalle" tono="acento" numerico>
+          <Texto peso="semibold">Ya te pagaste primero</Texto>
+          <Texto variante="detalle" tono="suave" numerico>
             Apartaste {formatMoneda(ahorro.neto)} {esMes ? 'este mes' : 'esta quincena'}
             {textoExtra}
           </Texto>
         </View>
-      </Superficie>
+      </View>
     );
   }
 
   const aportar = () => aportarAlAhorro(ahorro.falta, 'Págate primero', () => hapticos.exito());
 
   return (
-    <Superficie variante="contorno" relleno="lg">
-      <View className="flex-row items-center gap-2">
+    <View>
+      <Separador />
+      <View className="mt-4 flex-row items-center gap-2">
         <Icono nombre="leaf-outline" tamano={18} color="primario" />
-        <Texto peso="bold">Págate primero</Texto>
+        <Texto peso="semibold">Págate primero</Texto>
       </View>
       <Texto variante="detalle" tono="suave" className="mt-1" numerico>
         {ahorro.neto > 0
           ? `Llevas ${formatMoneda(ahorro.neto)}. Te faltan ${formatMoneda(ahorro.falta)} para tu aporte ${esMes ? 'del mes' : 'de la quincena'}.`
-          : `Aparta ${formatMoneda(ahorro.objetivo)} al ahorro apenas cobres, antes de gastar nada.`}
+          : ahorro.neto < 0
+            ? `Sacaste ${formatMoneda(-ahorro.neto)} del ahorro. Te faltan ${formatMoneda(ahorro.falta)} para tu aporte ${esMes ? 'del mes' : 'de la quincena'}.`
+            : `Aparta ${formatMoneda(ahorro.objetivo)} al ahorro apenas cobres, antes de gastar nada.`}
       </Texto>
       {extra > 0 ? (
         <Texto variante="detalle" tono="suave" className="mt-1" numerico>
           + {formatMoneda(extra)} extra: suma a tu meta del mes, no a este aporte.
         </Texto>
       ) : null}
-      <View className="mt-4 flex-row items-center gap-4">
+      <View className="mt-3 flex-row items-center gap-2">
         <Boton
           texto={`Ya aparté ${formatMoneda(ahorro.falta)}`}
           icono="checkmark"
+          variante="secundario"
           tamano="sm"
           cargando={cargando}
           onPress={aportar}
         />
         <Pressable
           accessibilityRole="button"
-          hitSlop={10}
+          className="min-h-11 justify-center px-3"
+          hitSlop={6}
           onPress={() =>
             router.push({
               pathname: '/movimiento-cuenta',
@@ -89,11 +92,11 @@ export function PagatePrimero({ ahorro, extra = 0, tipoPeriodo = 'quincena' }: P
             })
           }
         >
-          <Texto variante="detalle" peso="semibold" tono="primario">
+          <Texto variante="detalle" peso="medium" tono="primario">
             Otro monto
           </Texto>
         </Pressable>
       </View>
-    </Superficie>
+    </View>
   );
 }

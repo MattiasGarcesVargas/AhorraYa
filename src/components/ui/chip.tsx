@@ -7,7 +7,7 @@ import { Icono } from './icono';
 import { Texto } from './texto';
 
 const chip = tv({
-  base: 'h-10 flex-row items-center justify-center gap-1.5 rounded-full px-4 active:opacity-80',
+  base: 'h-11 flex-row items-center justify-center gap-1.5 rounded-full px-4 active:opacity-80',
   variants: {
     seleccionado: {
       true: 'bg-seleccion',

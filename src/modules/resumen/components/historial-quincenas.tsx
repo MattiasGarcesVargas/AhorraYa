@@ -1,6 +1,6 @@
 import { View } from 'react-native';
 
-import { Icono, Separador, Superficie, Texto } from '@/components/ui';
+import { Icono, Separador, Texto } from '@/components/ui';
 import { formatMoneda } from '@/lib/format';
 import { etiquetaPeriodo } from '@/lib/periodos';
 
@@ -31,7 +31,7 @@ function Fila({ fila }: { fila: FilaQuincena }) {
         color={fila.cumplido ? 'primario' : 'texto-suave'}
       />
       <View className="flex-1">
-        <Texto peso="semibold" numerico>
+        <Texto numerico>
           {etiquetaPeriodo(fila.periodo)}
           {fila.enCurso ? (
             <Texto variante="detalle" tono="primario">
@@ -44,7 +44,7 @@ function Fila({ fila }: { fila: FilaQuincena }) {
         </Texto>
       </View>
       <View className="items-end">
-        <Texto peso="bold" numerico tono={fila.cumplido ? 'primario' : 'normal'}>
+        <Texto peso="medium" numerico tono={fila.cumplido ? 'primario' : 'normal'}>
           {formatMoneda(fila.ahorrado)}
         </Texto>
         <Texto variante="mini" tono="suave" numerico>
@@ -58,13 +58,13 @@ function Fila({ fila }: { fila: FilaQuincena }) {
 /** La pestaña "Quincenas" de mi Excel (meses, si cobro una vez al mes): ¿aparté lo que tocaba y me alcanzó lo que quedaba? */
 export function HistorialQuincenas({ filas }: { filas: FilaQuincena[] }) {
   return (
-    <Superficie relleno="ninguno" className="px-4">
+    <View>
       {filas.map((fila, i) => (
         <View key={fila.periodo.inicio}>
           {i > 0 ? <Separador sangria={34} /> : null}
           <Fila fila={fila} />
         </View>
       ))}
-    </Superficie>
+    </View>
   );
 }

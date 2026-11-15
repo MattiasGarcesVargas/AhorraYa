@@ -11,7 +11,7 @@ function Parte({ etiqueta, centavos }: { etiqueta: string; centavos: number }) {
       <Texto variante="mini" tono="tinta-suave">
         {etiqueta}
       </Texto>
-      <Texto variante="subtitulo" tono="tinta" numerico>
+      <Texto variante="cuerpo" peso="semibold" tono="tinta" numerico>
         {formatMoneda(centavos)}
       </Texto>
     </View>
@@ -43,7 +43,7 @@ export function TarjetaPatrimonio({ totales }: { totales: TotalesCuentas }) {
             <Texto variante="detalle" tono="tinta-suave">
               Interés de hoy
             </Texto>
-            <Texto variante="detalle" peso="bold" tono="menta" numerico>
+            <Texto variante="detalle" tono="menta" numerico>
               +{formatMoneda(totales.interesHoy)}
             </Texto>
           </View>
@@ -51,7 +51,7 @@ export function TarjetaPatrimonio({ totales }: { totales: TotalesCuentas }) {
             <Texto variante="detalle" tono="tinta-suave">
               Interés de este mes
             </Texto>
-            <Texto variante="detalle" peso="bold" tono="menta" numerico>
+            <Texto variante="detalle" tono="menta" numerico>
               +{formatMoneda(totales.interesMes)}
             </Texto>
           </View>

@@ -1,7 +1,7 @@
 import { ScrollView, View } from 'react-native';
 import * as Linking from 'expo-linking';
 
-import { Boton, Chip, Superficie, Texto } from '@/components/ui';
+import { Boton, Chip, Texto } from '@/components/ui';
 import { hapticos } from '@/lib/hapticos';
 import { useCatalogoCategorias } from '@/modules/categorias/hooks/use-categorias';
 
@@ -68,7 +68,7 @@ export function GuiaWallet() {
       </Texto>
 
       <View className="gap-2">
-        <Texto peso="bold">Categoría por defecto</Texto>
+        <Texto peso="semibold">Categoría por defecto</Texto>
         <Texto variante="detalle" tono="suave">
           El pago no dice en qué gastaste, así que cae aquí. Después la cambias en un toque.
         </Texto>
@@ -100,13 +100,13 @@ export function GuiaWallet() {
       <Boton
         texto="Probar con un pago de $ 1.00"
         icono="flash-outline"
-        variante="secundario"
+        variante="contorno"
         ancho
         onPress={probar}
       />
 
-      <Superficie variante="contorno" className="gap-1">
-        <Texto variante="detalle" peso="bold">
+      <View className="gap-1 border-t border-borde pt-4">
+        <Texto variante="detalle" peso="semibold">
           Ten en cuenta
         </Texto>
         <Texto variante="detalle" tono="suave">
@@ -115,7 +115,7 @@ export function GuiaWallet() {
           mientras uses la app desde Expo Go, sólo funciona con la computadora encendida en tu misma
           red.
         </Texto>
-      </Superficie>
+      </View>
     </View>
   );
 }

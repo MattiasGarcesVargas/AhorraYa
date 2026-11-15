@@ -107,7 +107,7 @@ export function ConfirmacionRegistro({
               <View className="mt-6 w-full flex-row gap-3">
                 <Boton
                   texto="Deshacer"
-                  variante="secundario"
+                  variante="contorno"
                   className="flex-1"
                   onPress={alDeshacer}
                 />
@@ -131,13 +131,7 @@ export function ConfirmacionRegistro({
               <Texto peso="semibold" className="mt-2 text-center">
                 {estado.mensaje}
               </Texto>
-              <Boton
-                texto="Cerrar"
-                variante="secundario"
-                ancho
-                className="mt-5"
-                onPress={alCerrar}
-              />
+              <Boton texto="Cerrar" variante="contorno" ancho className="mt-5" onPress={alCerrar} />
             </View>
           ) : null}
         </Pressable>

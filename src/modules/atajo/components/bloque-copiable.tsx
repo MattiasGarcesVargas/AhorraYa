@@ -24,19 +24,19 @@ export function BloqueCopiable({ etiqueta, valor }: { etiqueta: string; valor: s
       onPress={copiar}
       className="active:opacity-80"
     >
-      <Superficie variante="tinta" className="gap-2">
+      <Superficie className="gap-2">
         <View className="flex-row items-center justify-between">
-          <Texto variante="mini" tono="tinta-suave">
+          <Texto variante="mini" tono="suave">
             {etiqueta}
           </Texto>
           <View className="flex-row items-center gap-1">
-            <Icono nombre={copiado ? 'checkmark' : 'copy-outline'} tamano={14} color="menta" />
-            <Texto variante="mini" tono="menta">
+            <Icono nombre={copiado ? 'checkmark' : 'copy-outline'} tamano={14} color="primario" />
+            <Texto variante="mini" tono="primario">
               {copiado ? 'Copiado' : 'Copiar'}
             </Texto>
           </View>
         </View>
-        <Texto variante="detalle" tono="tinta" selectable style={{ fontFamily: FUENTES.semibold }}>
+        <Texto variante="detalle" selectable style={{ fontFamily: FUENTES.medium }}>
           {valor}
         </Texto>
       </Superficie>

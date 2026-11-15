@@ -1,6 +1,6 @@
 import { View } from 'react-native';
 
-import { Superficie, Texto } from '@/components/ui';
+import { Texto } from '@/components/ui';
 import { formatMoneda } from '@/lib/format';
 
 import { proyectarInteres } from '../utils/interes';
@@ -12,7 +12,7 @@ function Dato({ etiqueta, centavos }: { etiqueta: string; centavos: number }) {
       <Texto variante="mini" tono="suave">
         {etiqueta}
       </Texto>
-      <Texto peso="bold" tono="primario" numerico>
+      <Texto peso="medium" tono="primario" numerico>
         +{formatMoneda(centavos)}
       </Texto>
     </View>
@@ -25,7 +25,7 @@ function Dato({ etiqueta, centavos }: { etiqueta: string; centavos: number }) {
  */
 export function ResumenInteres({ saldo }: { saldo: SaldoCuenta }) {
   return (
-    <Superficie className="gap-3">
+    <View className="gap-3">
       <View className="flex-row flex-wrap gap-x-4 gap-y-3">
         <Dato etiqueta="Hoy" centavos={saldo.interesHoy} />
         <Dato etiqueta="Este mes" centavos={saldo.interesMes} />
@@ -39,6 +39,6 @@ export function ResumenInteres({ saldo }: { saldo: SaldoCuenta }) {
         Es un estimado: saldo × tasa anual ÷ 365, sumado cada día. Mañana serían unos{' '}
         {formatMoneda(saldo.interesDiario)}. Si no coincide con el banco, usa &quot;Cuadrar&quot;.
       </Texto>
-    </Superficie>
+    </View>
   );
 }

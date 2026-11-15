@@ -28,7 +28,7 @@ export function SelectorIcono({ valor, alCambiar }: SelectorIconoProps) {
               activo ? 'bg-seleccion' : 'bg-superficie'
             }`}
           >
-            <Icono nombre={icono} tamano={22} color={activo ? 'seleccion-icono' : 'texto'} />
+            <Icono nombre={icono} tamano={22} color={activo ? 'seleccion-icono' : 'texto-suave'} />
           </Pressable>
         );
       })}

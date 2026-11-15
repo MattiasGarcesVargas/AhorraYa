@@ -36,7 +36,7 @@ export default function MovimientosScreen() {
 
   const cabecera = (
     <View>
-      <View className="mb-4 flex-row items-end justify-between gap-3">
+      <View className="mb-6 flex-row items-end justify-between gap-2">
         <View className="flex-1">
           <Texto variante="detalle" tono="suave" className="mb-0.5">
             {formatMesAnio(periodo.inicio).replace(/^./, (c) => c.toUpperCase())}
@@ -100,7 +100,7 @@ export default function MovimientosScreen() {
       }
       renderSectionHeader={({ section }) => (
         <View className="mt-5 flex-row items-baseline justify-between pb-1">
-          <Texto variante="detalle" peso="bold">
+          <Texto variante="detalle" peso="semibold">
             {section.titulo}
           </Texto>
           {section.gastadoDelDia > 0 ? (
@@ -115,11 +115,11 @@ export default function MovimientosScreen() {
       )}
       ItemSeparatorComponent={() => <Separador sangria={52} />}
       ListFooterComponent={
-        <View className="mt-6 gap-4">
+        <View className="mt-8 gap-4">
           <Boton
             texto="Estado de cuenta de este mes"
             icono="document-text-outline"
-            variante="secundario"
+            variante="contorno"
             ancho
             onPress={() =>
               router.push({

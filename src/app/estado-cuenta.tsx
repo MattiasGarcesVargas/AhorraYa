@@ -59,14 +59,14 @@ export default function EstadoCuentaScreen() {
           paddingBottom: insets.bottom + 32,
         }}
       >
-        <Texto tono="suave" className="mb-4 mt-2">
+        <Texto variante="detalle" tono="suave" className="mb-6 mt-2">
           Tu mes como un estado de cuenta: ingresos, gastos por categoría, todos tus movimientos y
           tu cuenta de ahorro con su saldo.
         </Texto>
 
         <SelectorPeriodo periodo={periodo} esActual={esActual} alDesplazar={desplazar} />
 
-        <View className="mt-3">
+        <View className="mt-4">
           {estado ? (
             <ResumenEstadoCuenta estado={estado} />
           ) : (
@@ -74,7 +74,7 @@ export default function EstadoCuentaScreen() {
           )}
         </View>
 
-        <View className="mt-6 gap-3">
+        <View className="mt-8 gap-3">
           <Boton
             texto="Descargar PDF"
             icono="document-text-outline"
@@ -87,7 +87,7 @@ export default function EstadoCuentaScreen() {
           <Boton
             texto="Exportar para Excel (CSV)"
             icono="grid-outline"
-            variante="secundario"
+            variante="contorno"
             tamano="lg"
             ancho
             disabled={!estado || exportar.isPending}

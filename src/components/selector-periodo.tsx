@@ -41,9 +41,9 @@ export function SelectorPeriodo({
                   hapticos.seleccion();
                   alCambiarTipo(id);
                 }}
-                className={`h-9 justify-center rounded-full px-4 ${activo ? 'bg-seleccion' : ''}`}
+                className={`h-10 min-w-11 items-center justify-center rounded-full px-4 ${activo ? 'bg-seleccion' : ''}`}
               >
-                <Texto variante="detalle" peso="bold" tono={activo ? 'seleccion' : 'suave'}>
+                <Texto variante="detalle" peso="semibold" tono={activo ? 'seleccion' : 'suave'}>
                   {texto}
                 </Texto>
               </Pressable>
@@ -63,11 +63,12 @@ export function SelectorPeriodo({
         />
         <Pressable
           accessibilityRole="button"
+          className="min-h-11 justify-center"
           accessibilityLabel={esActual ? 'Periodo actual' : 'Volver al periodo actual'}
           disabled={esActual}
           onPress={() => alDesplazar(0)}
         >
-          <Texto variante="detalle" peso="bold" numerico className="min-w-[104px] text-center">
+          <Texto variante="detalle" peso="semibold" numerico className="min-w-[104px] text-center">
             {etiquetaPeriodo(periodo)}
           </Texto>
         </Pressable>

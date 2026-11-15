@@ -27,18 +27,16 @@ export function FilaMovimiento({ movimiento, alPulsar, alMantener }: FilaMovimie
       onPress={alPulsar ? () => alPulsar(movimiento) : undefined}
       onLongPress={alMantener ? () => alMantener(movimiento) : undefined}
       delayLongPress={350}
-      className="flex-row items-center gap-3 py-2.5 active:opacity-70"
+      className="min-h-14 flex-row items-center gap-3 py-2.5 active:opacity-70"
     >
       <AvatarCategoria icono={movimiento.icono} color={movimiento.color} />
       <View className="flex-1">
-        <Texto peso="semibold" numberOfLines={1}>
-          {movimiento.titulo}
-        </Texto>
+        <Texto numberOfLines={1}>{movimiento.titulo}</Texto>
         <Texto variante="detalle" tono="suave" numberOfLines={1}>
           {movimiento.detalle}
         </Texto>
       </View>
-      <Texto peso="bold" numerico tono={movimiento.tono === 'positivo' ? 'primario' : 'normal'}>
+      <Texto peso="medium" numerico tono={movimiento.tono === 'positivo' ? 'primario' : 'normal'}>
         {formatMonedaConSigno(movimiento.importe)}
       </Texto>
     </Pressable>

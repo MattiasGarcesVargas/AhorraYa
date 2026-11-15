@@ -3,7 +3,7 @@ import { useRouter } from 'expo-router';
 
 import { Pantalla } from '@/components/pantalla';
 import { Seccion } from '@/components/seccion';
-import { BotonIcono, Separador, Superficie, Texto } from '@/components/ui';
+import { BotonIcono, Separador, Texto } from '@/components/ui';
 import { hoyIso } from '@/lib/fechas';
 import { mesQueContiene } from '@/lib/periodos';
 import { PuntoDePartida } from '@/modules/ahorro/components/punto-de-partida';
@@ -65,7 +65,7 @@ export default function CuentasScreen() {
         </View>
       }
     >
-      <View className="gap-3">
+      <View className="gap-4">
         {totales ? (
           <TarjetaPatrimonio totales={totales} />
         ) : (
@@ -76,22 +76,24 @@ export default function CuentasScreen() {
 
       <Seccion titulo="Mis cuentas">
         {saldos && saldos.length > 0 ? (
-          <Superficie relleno="ninguno" className="overflow-hidden">
+          <View>
             {saldos.map((saldo, i) => (
               <View key={saldo.cuenta.id}>
-                {i > 0 ? <Separador sangria={68} /> : null}
-                <FilaCuenta
-                  saldo={saldo}
-                  alPulsar={() =>
-                    router.push({
-                      pathname: '/cuenta/[id]',
-                      params: { id: String(saldo.cuenta.id) },
-                    })
-                  }
-                />
+                {i > 0 ? <Separador sangria={52} /> : null}
+                <View className="-mx-4">
+                  <FilaCuenta
+                    saldo={saldo}
+                    alPulsar={() =>
+                      router.push({
+                        pathname: '/cuenta/[id]',
+                        params: { id: String(saldo.cuenta.id) },
+                      })
+                    }
+                  />
+                </View>
               </View>
             ))}
-          </Superficie>
+          </View>
         ) : (
           <Texto variante="detalle" tono="suave">
             Crea tu primera cuenta con el botón + de arriba.
@@ -117,16 +119,13 @@ export default function CuentasScreen() {
         </Seccion>
       ) : null}
 
-      <Superficie variante="contorno" className="mt-8 gap-1">
-        <Texto variante="detalle" peso="bold">
-          Tus reglas
-        </Texto>
+      <Seccion titulo="Tus reglas">
         <Texto variante="detalle" tono="suave">
           Apenas cobras, una parte va a la flexible y con el resto vives hasta el siguiente pago.
           Todo ingreso extra va completo al ahorro: suma a tu meta del mes, no reemplaza el aporte
           de tu cobro. Si te pasas en una categoría, compensa en otra: el ahorro no se toca.
         </Texto>
-      </Superficie>
+      </Seccion>
     </Pantalla>
   );
 }

@@ -31,10 +31,10 @@ const texto = tv({
 
 const PESO_POR_VARIANTE: Record<NonNullable<VariantProps<typeof texto>['variante']>, PesoFuente> = {
   display: 'extrabold',
-  titulo: 'extrabold',
-  subtitulo: 'bold',
-  cuerpo: 'medium',
-  detalle: 'medium',
+  titulo: 'bold',
+  subtitulo: 'semibold',
+  cuerpo: 'regular',
+  detalle: 'regular',
   mini: 'semibold',
 };
 

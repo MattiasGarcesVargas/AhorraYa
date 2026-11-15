@@ -9,7 +9,7 @@ import { leerBorrador } from '@/modules/atajo/utils/interpretar-enlace';
 import type { CatalogoCategorias } from '@/modules/categorias/categorias.types';
 import { useCategorias } from '@/modules/categorias/hooks/use-categorias';
 import type { Cuenta } from '@/modules/cuentas/cuentas.types';
-import { useCuentas } from '@/modules/cuentas/hooks/use-cuentas';
+import { useCuentas, useRetirar } from '@/modules/cuentas/hooks/use-cuentas';
 import { cuentaPrincipal } from '@/modules/cuentas/utils/saldos';
 import { FormularioGasto } from '@/modules/gastos/components/formulario-gasto';
 import {
@@ -61,6 +61,7 @@ function Registro({ catalogo, cuentas }: Datos) {
   const borrador = useMemo(() => leerBorrador(JSON.parse(clave), catalogo), [clave, catalogo]);
 
   const registrar = useRegistrarGasto();
+  const retirar = useRetirar();
   const recordarMetodo = useUltimasElecciones((estado) => estado.recordarMetodo);
 
   return (
@@ -70,17 +71,37 @@ function Registro({ catalogo, cuentas }: Datos) {
       cuentas={cuentas}
       cuentaPorDefecto={cuentaPrincipal(cuentas, 'diaria')?.id ?? null}
       aviso={typeof params.aviso === 'string' && params.aviso ? params.aviso : undefined}
-      guardando={registrar.isPending}
+      guardando={registrar.isPending || retirar.isPending}
       alCrearCategoria={() => router.push('/categoria')}
-      alGuardar={(gasto) =>
-        registrar.mutate(gasto, {
-          onSuccess: () => {
-            hapticos.exito();
-            recordarMetodo(gasto.metodoPago);
-            cerrar();
-          },
-        })
-      }
+      alGuardar={(gasto) => {
+        const onSuccess = () => {
+          hapticos.exito();
+          recordarMetodo(gasto.metodoPago);
+          cerrar();
+        };
+        // Pagado desde una cuenta de ahorro: es un retiro que deja el gasto
+        // anotado, para que la meta vea que esa plata salió del ahorro.
+        const deAhorro = cuentas.find((c) => c.id === gasto.cuentaId)?.tipo === 'flexible';
+        if (deAhorro && gasto.cuentaId !== null) {
+          retirar.mutate(
+            {
+              cuentaId: gasto.cuentaId,
+              montoCentavos: gasto.montoCentavos,
+              fecha: gasto.fecha,
+              gasto: {
+                categoria: gasto.categoria,
+                metodoPago: gasto.metodoPago,
+                descripcion: gasto.nota,
+              },
+              nota: gasto.nota ?? catalogo.porId(gasto.categoria).nombre,
+              haciaCuentaId: null,
+            },
+            { onSuccess },
+          );
+          return;
+        }
+        registrar.mutate(gasto, { onSuccess });
+      }}
     />
   );
 }

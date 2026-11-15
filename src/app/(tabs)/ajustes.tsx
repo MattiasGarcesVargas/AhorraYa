@@ -6,7 +6,7 @@ import { useRouter } from 'expo-router';
 import { FilaOpcion } from '@/components/fila-opcion';
 import { Pantalla } from '@/components/pantalla';
 import { Seccion } from '@/components/seccion';
-import { Separador, Superficie, Texto } from '@/components/ui';
+import { Separador, Texto } from '@/components/ui';
 import { confirmar } from '@/lib/confirmar';
 import { formatMoneda, formatMonedaEntera } from '@/lib/format';
 import { useBorrarDatos } from '@/modules/ajustes/hooks/use-borrar-datos';
@@ -26,17 +26,21 @@ const CAMPOS: CampoPlan[] = [
   'mesadaSemanalCentavos',
 ];
 
-/** Filas agrupadas sobre una superficie, separadas por una línea fina. */
+/** Filas en lista, separadas por una línea fina (sin caja). */
 function Grupo({ children }: { children: ReactNode }) {
   return (
-    <Superficie relleno="ninguno" className="overflow-hidden">
+    <View className="-mx-4">
       {Children.toArray(children).map((hijo, i) => (
         <View key={i}>
-          {i > 0 ? <Separador sangria={48} /> : null}
+          {i > 0 ? (
+            <View className="px-4">
+              <Separador />
+            </View>
+          ) : null}
           {hijo}
         </View>
       ))}
-    </Superficie>
+    </View>
   );
 }
 
@@ -80,7 +84,7 @@ export default function AjustesScreen() {
           ))}
         </Grupo>
         {coherencia && !coherencia.ok ? (
-          <Texto variante="detalle" tono="peligro" className="mt-2 px-1" numerico>
+          <Texto variante="detalle" tono="peligro" className="mt-2" numerico>
             Revisa tu plan: {coherencia.motivo} {coherencia.sugerencia}
           </Texto>
         ) : null}
@@ -88,7 +92,7 @@ export default function AjustesScreen() {
           <Texto
             variante="detalle"
             tono={holgura >= 0 ? 'suave' : 'peligro'}
-            className="mt-2 px-1"
+            className="mt-2"
             numerico
           >
             {holgura >= 0
@@ -160,7 +164,7 @@ export default function AjustesScreen() {
             alPulsar={borrarTodo}
           />
         </Grupo>
-        <Texto variante="mini" tono="suave" className="mt-2 px-1">
+        <Texto variante="mini" tono="suave" className="mt-2">
           Tus datos viven sólo en este teléfono. Nada sale de aquí.
         </Texto>
       </Seccion>

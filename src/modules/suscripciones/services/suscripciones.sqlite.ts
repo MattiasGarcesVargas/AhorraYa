@@ -1,5 +1,7 @@
 import type { SQLiteDatabase } from 'expo-sqlite';
 
+import { hoyIso } from '@/lib/fechas';
+
 import type { MetodoPagoId } from '@/constants/metodos-pago.constants';
 import { ahoraIso } from '@/lib/db/base-de-datos';
 
@@ -77,7 +79,9 @@ export function crearSuscripcionesSqlite(db: SQLiteDatabase): SuscripcionesRepos
       await db.runAsync(
         `UPDATE suscripciones
          SET nombre = ?, monto_centavos = ?, categoria = ?, metodo_pago = ?, cuenta_id = ?,
-             dia_cobro = ?, activa = ?
+             dia_cobro = ?, activa = ?,
+             -- Al reactivar una pausada no se cobran los meses que estuvo en pausa.
+             cobrada_hasta = CASE WHEN activa = 0 AND ? = 1 THEN ? ELSE cobrada_hasta END
          WHERE id = ?`,
         datos.nombre,
         datos.montoCentavos,
@@ -86,6 +90,8 @@ export function crearSuscripcionesSqlite(db: SQLiteDatabase): SuscripcionesRepos
         datos.cuentaId,
         datos.diaCobro,
         datos.activa ? 1 : 0,
+        datos.activa ? 1 : 0,
+        hoyIso(),
         id,
       );
     },

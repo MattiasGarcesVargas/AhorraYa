@@ -12,18 +12,19 @@ export function VisorMonto({ entrada, etiqueta }: { entrada: string; etiqueta?: 
   const enteroConMiles = entero.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
 
   return (
-    <View className="items-center py-4" accessibilityLiveRegion="polite">
+    <View className="items-center py-6" accessibilityLiveRegion="polite">
       {etiqueta ? (
         <Texto variante="detalle" tono="suave" className="mb-1">
           {etiqueta}
         </Texto>
       ) : null}
       <View className="flex-row items-baseline">
-        <Texto variante="subtitulo" peso="bold" tono="suave" className="mr-1">
+        <Texto variante="subtitulo" peso="regular" tono="suave" className="mr-1">
           $
         </Texto>
         <Texto
           variante="display"
+          peso="bold"
           tono={vacio ? 'suave' : 'normal'}
           numerico
           adjustsFontSizeToFit
