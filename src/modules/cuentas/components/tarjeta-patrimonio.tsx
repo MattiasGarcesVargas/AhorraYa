@@ -32,6 +32,9 @@ export function TarjetaPatrimonio({ totales }: { totales: TotalesCuentas }) {
       <View className="flex-row gap-4">
         <Parte etiqueta="Ahorrado" centavos={totales.ahorros} />
         <Parte etiqueta="Para gastar" centavos={totales.disponible} />
+        {totales.efectivo !== 0 ? (
+          <Parte etiqueta="En efectivo" centavos={totales.efectivo} />
+        ) : null}
       </View>
 
       {totales.interesDiario > 0 || totales.interesMes > 0 ? (

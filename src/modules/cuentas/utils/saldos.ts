@@ -119,8 +119,10 @@ export interface TotalesCuentas {
   patrimonio: Centavos;
   /** Lo que está en cuentas flexibles: el ahorro. */
   ahorros: Centavos;
-  /** Lo que está en cuentas del día a día: para gastar. */
+  /** Para gastar: lo de las cuentas del día a día más el efectivo. */
   disponible: Centavos;
+  /** La parte de `disponible` que está en efectivo (la billetera). */
+  efectivo: Centavos;
   interesHoy: Centavos;
   interesMes: Centavos;
   interesDiario: Centavos;
@@ -133,7 +135,8 @@ export function totalizar(saldos: readonly SaldoCuenta[]): TotalesCuentas {
   return {
     patrimonio: sumar(saldos.map((s) => s.saldo)),
     ahorros: deTipo('flexible'),
-    disponible: deTipo('diaria'),
+    disponible: deTipo('diaria') + deTipo('efectivo'),
+    efectivo: deTipo('efectivo'),
     interesHoy: sumar(saldos.map((s) => s.interesHoy)),
     interesMes: sumar(saldos.map((s) => s.interesMes)),
     interesDiario: sumar(saldos.map((s) => s.interesDiario)),
