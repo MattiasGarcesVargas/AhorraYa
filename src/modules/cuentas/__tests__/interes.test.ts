@@ -1,5 +1,6 @@
 import type { TasaCuenta } from '../cuentas.types';
 import {
+  diasQueAcredita,
   formatTasa,
   interesDiarioEstimado,
   interpretarTasa,
@@ -28,6 +29,17 @@ describe('interés diario', () => {
     // 36.99 centavos cada día: paga 36, lo que sobra del centavo no se acumula.
     expect(serie.map((dia) => dia.interes)).toEqual([0, 36, 36]);
     expect(serie.at(-1)?.saldo).toBe(270_072);
+  });
+
+  it('el viernes paga junto lo del viernes, sábado y domingo; el fin de semana, nada', () => {
+    // $2,579.50 al 5 % son $0.3533 al día: el viernes llegan $1.06, no 3 × $0.35.
+    const serie = serieDiaria([{ fecha: '2026-11-11', importe: 257_950 }], CINCO, '2026-11-16');
+
+    //                              mié jue vie  sáb dom lun
+    expect(serie.map((dia) => dia.interes)).toEqual([0, 35, 106, 0, 0, 35]);
+    expect(['2026-11-12', '2026-11-13', '2026-11-14', '2026-11-15'].map(diasQueAcredita)).toEqual([
+      1, 3, 0, 0,
+    ]);
   });
 
   it('el interés se suma al saldo y también genera interés (30 días ≈ $11.12)', () => {

@@ -1,4 +1,5 @@
 import { sumar, type Centavos } from '@/lib/dinero';
+import { diasQueAcredita } from './interes';
 import type { FechaIso } from '@/lib/fechas';
 import type { Periodo } from '@/lib/periodos';
 import type { Gasto } from '@/modules/gastos/gastos.types';
@@ -195,7 +196,8 @@ export function construirLibro(
     ultimaFecha = dia.fecha;
     if (dia.interes > 0) {
       interesPendiente += dia.interes;
-      diasDeInteres += 1;
+      // El pago del viernes cubre también el sábado y el domingo.
+      diasDeInteres += diasQueAcredita(dia.fecha);
     }
 
     const delDia = porDia.get(dia.fecha);

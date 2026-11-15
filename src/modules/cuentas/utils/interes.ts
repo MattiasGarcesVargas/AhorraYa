@@ -1,5 +1,5 @@
 import type { Centavos } from '@/lib/dinero';
-import { sumarDias, type FechaIso } from '@/lib/fechas';
+import { deFechaIso, sumarDias, type FechaIso } from '@/lib/fechas';
 
 import type { TasaCuenta } from '../cuentas.types';
 
@@ -29,6 +29,21 @@ function interesDeUnDia(saldo: Centavos, tasaBp: number): number {
   return (saldo * tasaBp) / PUNTOS_BASICOS / DIAS_DEL_ANIO;
 }
 
+const VIERNES = 5;
+const SABADO = 6;
+const DOMINGO = 0;
+
+/**
+ * Cuántos días de interés paga el banco en una fecha. Paga de lunes a
+ * viernes; el sábado y el domingo no acredita nada, así que el viernes
+ * adelanta los tres días juntos (viernes, sábado y domingo).
+ */
+export function diasQueAcredita(fecha: FechaIso): number {
+  const dia = deFechaIso(fecha).getDay();
+  if (dia === VIERNES) return 3;
+  return dia === SABADO || dia === DOMINGO ? 0 : 1;
+}
+
 /**
  * A dos decimales SIN redondear hacia arriba: $ 0.3555 son 35 centavos, no 36.
  * El épsilon evita que 36.999999999 (por coma flotante) pierda un centavo entero.
@@ -53,7 +68,8 @@ export function tasaVigente(tasas: readonly TasaCuenta[], fecha: FechaIso): numb
  * banco paga `saldo × tasa anual ÷ 365` sobre lo que había al cierre del día
  * anterior, y ese pago se SUMA al saldo, así que al día siguiente también
  * genera interés. El pago de cada día se corta a dos decimales, sin redondear
- * hacia arriba (lo que sobra de un centavo no se acumula).
+ * hacia arriba (lo que sobra de un centavo no se acumula). El fin de semana no
+ * hay pago: el viernes llega el de los tres días (ver `diasQueAcredita`).
  *
  * El interés no se guarda en la base: sale de aquí. Por eso retirar, aportar
  * o corregir un movimiento de hace un mes recalcula todo sin tocar nada más.
@@ -79,7 +95,9 @@ export function serieDiaria(
   let tasaDeAyer = 0;
 
   for (let fecha = primerDia; fecha <= hasta; fecha = sumarDias(fecha, 1)) {
-    const interes = centavosEnteros(interesDeUnDia(saldo, tasaDeAyer));
+    // El corte a dos decimales se hace sobre el pago completo: el viernes son
+    // tres días de $ 0.3533 = $ 1.06, no tres veces $ 0.35.
+    const interes = centavosEnteros(interesDeUnDia(saldo, tasaDeAyer) * diasQueAcredita(fecha));
 
     const movimientos = netoPorDia.get(fecha) ?? 0;
     saldo += interes + movimientos;
